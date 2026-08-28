@@ -256,3 +256,23 @@ export interface URAStatusResponse {
   timestamp: string;
 }
 
+
+export interface URAMonthlyPricePoint {
+  sortKey: number;
+  label: string;
+  shortLabel: string;
+  year: number;
+  transactionCount: number;
+  minPrice: number | null;
+  medianPrice: number | null;
+  maxPrice: number | null;
+  medianPsf: number | null;
+}
+
+export interface URAMonthlyTrend {
+  district: string;
+  batch: number;
+  months: URAMonthlyPricePoint[];
+  totalTransactions: number;
+  generatedAt: string;
+}

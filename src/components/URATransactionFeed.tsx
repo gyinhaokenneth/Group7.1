@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { URADistrictStats, URATransaction, URAStatusResponse } from '../types';
 import { fetchURADistrictStats, fetchURATransactions, fetchURAStatus, syncAllURABatches } from '../services/uraService';
+import { URAMonthlyPriceChart } from './URAMonthlyPriceChart';
 import { Building, CheckCircle2, RefreshCw, Layers, MapPin, ArrowUpRight, Filter, ShieldCheck, Database, Calendar, Tag } from 'lucide-react';
 
 interface URATransactionFeedProps {
@@ -222,6 +223,15 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
           <p className="font-serif text-sm text-[#1A1A1A]/70">Loading verified URA data for {district}...</p>
         </div>
       )}
+
+      {/* 6-month min / median / max transacted price trend for this district */}
+      <URAMonthlyPriceChart
+        district={district}
+        districtName={districtName}
+        propertyType={propTypeFilter}
+        saleType={saleTypeFilter}
+        months={6}
+      />
 
       {/* Top developments in this district spotlight */}
       {stats && stats.topProjects && stats.topProjects.length > 0 && (

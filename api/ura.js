@@ -230,7 +230,12 @@ function enrichTransaction(t, project) {
 /**
  * Extract and filter transactions for a given district
  */
-export async function getTransactionsForDistrict(districtCode, options = {}) {
+/**
+ * Collect every enriched transaction for a district, with optional
+ * property-type / sale-type filters applied. No row cap - callers that
+ * serve raw rows slice it down themselves.
+ */
+async function collectDistrictTransactions(districtCode, options = {}) {
   const normDistrict = normalizeDistrict(districtCode);
   const targetBatch = getBatchForDistrict(normDistrict);
 
@@ -275,12 +280,121 @@ export async function getTransactionsForDistrict(districtCode, options = {}) {
     filtered = filtered.filter((t) => t.typeOfSale === String(options.saleType));
   }
 
+  return { normDistrict, targetBatch, filtered };
+}
+
+/**
+ * Extract and filter transactions for a given district
+ */
+export async function getTransactionsForDistrict(districtCode, options = {}) {
+  const { normDistrict, targetBatch, filtered } = await collectDistrictTransactions(districtCode, options);
+
   const limit = Math.max(1, Math.min(500, Number(options.limit) || 100));
   return {
     district: `D${normDistrict}`,
     batch: targetBatch,
     totalMatching: filtered.length,
     transactions: filtered.slice(0, limit),
+  };
+}
+
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function quantile(sortedList, q) {
+  if (sortedList.length === 0) return 0;
+  const pos = (sortedList.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  const next = sortedList[base + 1];
+  return next !== undefined
+    ? Math.round(sortedList[base] + rest * (next - sortedList[base]))
+    : Math.round(sortedList[base]);
+}
+
+/**
+ * Monthly min / median / max transacted price for a district.
+ *
+ * Aggregated over the full filtered set rather than the capped row feed, so
+ * the trend is not skewed by wherever the 500-row limit happens to fall.
+ * Months with no transactions are returned with a null series so the chart
+ * can show a real gap instead of interpolating across it.
+ */
+export async function getMonthlyPriceTrend(districtCode, options = {}) {
+  const months = Math.max(1, Math.min(24, Number(options.months) || 6));
+  const { normDistrict, targetBatch, filtered } = await collectDistrictTransactions(districtCode, options);
+
+  // Anchor the window on the newest contract in the data, not on today - URA
+  // publishes with a lag, so "last 6 months" from today can be mostly empty.
+  const latestSortKey = filtered.length > 0 ? filtered[0].sortKey : null;
+  if (latestSortKey === null) {
+    return {
+      district: `D${normDistrict}`,
+      batch: targetBatch,
+      months: [],
+      totalTransactions: 0,
+      generatedAt: new Date().toISOString(),
+    };
+  }
+
+  const latestYear = Math.floor(latestSortKey / 100);
+  const latestMonth = latestSortKey % 100;
+
+  // Build the window oldest -> newest.
+  const window = [];
+  for (let i = months - 1; i >= 0; i--) {
+    const totalMonths = latestYear * 12 + (latestMonth - 1) - i;
+    const y = Math.floor(totalMonths / 12);
+    const m = (totalMonths % 12) + 1;
+    window.push({ sortKey: y * 100 + m, year: y, month: m });
+  }
+
+  const buckets = new Map(window.map((w) => [w.sortKey, []]));
+  for (const t of filtered) {
+    const bucket = buckets.get(t.sortKey);
+    if (bucket && t.price > 0) bucket.push(t);
+  }
+
+  let totalTransactions = 0;
+  const series = window.map((w) => {
+    const rows = buckets.get(w.sortKey);
+    const label = `${MONTH_NAMES[w.month - 1]} ${w.year}`;
+    if (rows.length === 0) {
+      return {
+        sortKey: w.sortKey,
+        label,
+        shortLabel: MONTH_NAMES[w.month - 1],
+        year: w.year,
+        transactionCount: 0,
+        minPrice: null,
+        medianPrice: null,
+        maxPrice: null,
+        medianPsf: null,
+      };
+    }
+
+    totalTransactions += rows.length;
+    const prices = rows.map((t) => t.price).sort((a, b) => a - b);
+    const psfs = rows.map((t) => t.psf).filter((p) => p > 0).sort((a, b) => a - b);
+
+    return {
+      sortKey: w.sortKey,
+      label,
+      shortLabel: MONTH_NAMES[w.month - 1],
+      year: w.year,
+      transactionCount: rows.length,
+      minPrice: prices[0],
+      medianPrice: quantile(prices, 0.5),
+      maxPrice: prices[prices.length - 1],
+      medianPsf: psfs.length > 0 ? quantile(psfs, 0.5) : null,
+    };
+  });
+
+  return {
+    district: `D${normDistrict}`,
+    batch: targetBatch,
+    months: series,
+    totalTransactions,
+    generatedAt: new Date().toISOString(),
   };
 }
 
@@ -499,7 +613,17 @@ export default async function handler(req, res) {
       });
     }
 
-    // 5. Raw batch endpoint (batches 1 to 4)
+    // 5. Monthly min/median/max price trend
+    if (path === '/monthly-trend') {
+      const district = query.district || 'D09';
+      const trend = await getMonthlyPriceTrend(district, query);
+      return res.status(200).json({
+        success: true,
+        ...trend,
+      });
+    }
+
+    // 6. Raw batch endpoint (batches 1 to 4)
     if (path === '/batch') {
       const batch = parseInt(query.batch, 10) || 1;
       const projects = await fetchBatch(batch, query.refresh === 'true');
@@ -511,7 +635,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // 6. Merge and Sync all 4 batches
+    // 7. Merge and Sync all 4 batches
     if (path === '/sync') {
       const t0 = Date.now();
       const merged = await fetchAllBatchesMerged(true);

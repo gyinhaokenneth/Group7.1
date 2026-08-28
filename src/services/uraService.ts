@@ -1,4 +1,4 @@
-import { URADistrictStats, URATransaction, URAStatusResponse } from '../types';
+import { URADistrictStats, URATransaction, URAStatusResponse, URAMonthlyTrend } from '../types';
 
 /**
  * Client-side URA DataService API client
@@ -64,6 +64,26 @@ export async function syncAllURABatches(): Promise<{
     return await res.json();
   } catch (err) {
     console.warn('Failed to sync all URA batches:', err);
+    return null;
+  }
+}
+
+export async function fetchURAMonthlyTrend(
+  districtCode: string,
+  options: { months?: number; propertyType?: string; saleType?: string } = {}
+): Promise<URAMonthlyTrend | null> {
+  try {
+    const params = new URLSearchParams({
+      district: districtCode,
+      months: String(options.months || 6),
+      propertyType: options.propertyType || 'all',
+      saleType: options.saleType || 'all',
+    });
+    const res = await fetch(`/api/ura/monthly-trend?${params.toString()}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn(`Failed to fetch URA monthly trend for ${districtCode}:`, err);
     return null;
   }
 }
