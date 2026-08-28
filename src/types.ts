@@ -1,6 +1,6 @@
 export type TabType = 'valuation' | 'trajectory' | 'rent' | 'trends' | 'about';
 
-export type UserPersonaRole = 'buyer' | 'seller' | 'rentee' | 'investor';
+export type UserPersonaRole = 'buyer' | 'seller' | 'investor';
 
 export type PropertyType = 'apartment' | 'condominium' | 'landed';
 

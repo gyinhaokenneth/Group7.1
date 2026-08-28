@@ -11,7 +11,6 @@ import {
   getBalasTableFactor,
   getDistrictPriceStats,
 } from '../data/singaporeDistricts';
-import { PropertyPriceIndexCard } from './PropertyPriceIndexCard';
 import { GeminiInsightPanel } from './GeminiInsightPanel';
 import { URATransactionFeed } from './URATransactionFeed';
 import {
@@ -306,7 +305,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
             </h1>
             <div className="editorial-rule my-1" />
             <p className="text-[16px] md:text-[17px] leading-[1.65] text-[#1A1A1A]/80 font-serif">
-              Tailored for <strong>Buyers, Sellers, Renters, and Investors</strong>. Query official price indices, compute leasehold decay, evaluate net seller proceeds, and generate Gemini AI macroeconomic advisories.
+              Tailored for <strong>Buyers, Sellers, and Investors</strong>. Compute leasehold decay, evaluate net seller proceeds, benchmark against live URA transaction records, and generate Gemini AI macroeconomic advisories.
             </p>
 
             {/* Quick Live Indicators */}
@@ -334,11 +333,10 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-2">
                   Select User Persona
                 </span>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {[
                     { key: 'buyer', label: 'Property Buyer' },
                     { key: 'seller', label: 'Property Seller' },
-                    { key: 'rentee', label: 'Rentee / Tenant' },
                     { key: 'investor', label: 'Property Investor' },
                   ].map((r) => (
                     <button
@@ -666,14 +664,6 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Property Price Index & Location Stats Section (Always Visible) */}
-      <section className="max-w-[1240px] mx-auto px-5 md:px-12 py-12">
-        <PropertyPriceIndexCard
-          stats={locationStats}
-          sqft={Number(formValues.size) || 1200}
-        />
       </section>
 
       {/* Official Singapore URA DataService Live Transaction Registry */}
