@@ -45,58 +45,6 @@ const DISTRICT_RATES: Record<string, { name: string; baseGrowth: number; histori
 };
 
 // Preset Profiles for quick home buyer scenario testing
-const BUYER_PRESETS = [
-  {
-    label: 'First-Time Buyer Starter Condo',
-    badge: 'Starter',
-    price: 1380000,
-    sqft: 780,
-    type: 'private',
-    district: 'rcr',
-    years: 5,
-    scenario: 'baseline' as TrajectoryScenario,
-  },
-  {
-    label: 'HDB 5-Room Prime Resale (Bishan DBSS)',
-    badge: 'HDB Resale',
-    price: 1390000,
-    sqft: 1290,
-    type: 'hdb',
-    district: 'rcr',
-    years: 5,
-    scenario: 'baseline' as TrajectoryScenario,
-  },
-  {
-    label: 'Family Prime Residence',
-    badge: 'Prime',
-    price: 2650000,
-    sqft: 1250,
-    type: 'private',
-    district: 'ccr',
-    years: 7,
-    scenario: 'historical' as TrajectoryScenario,
-  },
-  {
-    label: 'Waterfront / Core Trophy Asset',
-    badge: 'Trophy',
-    price: 4950000,
-    sqft: 1850,
-    type: 'private',
-    district: 'marina',
-    years: 10,
-    scenario: 'accelerated' as TrajectoryScenario,
-  },
-  {
-    label: 'Landed Prestige Estate',
-    badge: 'Landed',
-    price: 7800000,
-    sqft: 3900,
-    type: 'landed',
-    district: 'ccr',
-    years: 10,
-    scenario: 'baseline' as TrajectoryScenario,
-  },
-];
 
 export const PriceTrajectoryPredictor: React.FC<PriceTrajectoryPredictorProps> = ({
   onNavigateTab,
@@ -293,16 +241,6 @@ export const PriceTrajectoryPredictor: React.FC<PriceTrajectoryPredictorProps> =
       sqft
     );
   }, [normalizedDistrict, propertyType, sqft]);
-
-  // Load a quick-select preset
-  const handleApplyPreset = (preset: (typeof BUYER_PRESETS)[0]) => {
-    setCurrentPrice(preset.price);
-    setSqft(preset.sqft);
-    setPropertyType(preset.type);
-    setDistrict(preset.district);
-    setHoldingYears(preset.years);
-    setScenario(preset.scenario);
-  };
 
   // Save prediction to user account
   const handleSaveToAccount = () => {
@@ -530,42 +468,6 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 </>
               )}
             </button>
-          </div>
-        </div>
-
-        {/* Quick Select Presets Bar */}
-        <div className="mt-8 pt-6 border-t border-[#1A1A1A]/10">
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/60">
-              Curated Buyer Archetypes:
-            </span>
-            <span className="font-display text-[12px] italic text-[#8C7355]">
-              Select a benchmark profile to populate simulation
-            </span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {BUYER_PRESETS.map((preset, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleApplyPreset(preset)}
-                className="text-left bg-[#FFFFFF] hover:bg-[#E2DFD8]/40 border border-[#1A1A1A]/10 hover:border-[#8C7355] p-3 rounded-sm transition-all cursor-pointer group"
-              >
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#8C7355]">
-                    {preset.badge}
-                  </span>
-                  <span className="font-display text-[13px] font-medium text-[#1A1A1A]">
-                    ${(preset.price / 1000000).toFixed(2)}M
-                  </span>
-                </div>
-                <div className="font-display text-[13px] text-[#1A1A1A] group-hover:text-[#8C7355] transition-colors truncate">
-                  {preset.label}
-                </div>
-                <div className="font-sans text-[10px] text-[#1A1A1A]/50 uppercase tracking-wider mt-0.5">
-                  {preset.sqft} sqft • {preset.years}-Yr Horizon
-                </div>
-              </button>
-            ))}
           </div>
         </div>
       </section>
