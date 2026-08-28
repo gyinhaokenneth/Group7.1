@@ -13,7 +13,7 @@ interface NotificationItem {
   title: string;
   description: string;
   time: string;
-  type: 'trend' | 'listing' | 'algorithm' | 'rate';
+  type: 'trend' | 'algorithm' | 'rate';
   read: boolean;
 }
 
@@ -29,14 +29,6 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
       description: 'Core Central Region gross rental yield stabilized at 2.9%, with suburban districts offering up to 4.1%.',
       time: '2 hours ago',
       type: 'trend',
-      read: false,
-    },
-    {
-      id: 'n2',
-      title: 'New Luxury Listing: Parkside Terraces',
-      description: 'Exclusive 3-bedroom terrace residence listed in Orchard Enclave at $5,100/mo.',
-      time: '1 day ago',
-      type: 'listing',
       read: false,
     },
     {
@@ -103,9 +95,6 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                 if (item.type === 'trend') {
                   onClose();
                   onNavigateTab('trends');
-                } else if (item.type === 'listing') {
-                  onClose();
-                  onNavigateTab('rent');
                 }
               }}
               className={`p-3.5 rounded-sm border transition-all cursor-pointer ${

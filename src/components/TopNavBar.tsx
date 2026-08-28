@@ -22,7 +22,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   const navItems: { id: TabType; label: string }[] = [
     { id: 'valuation', label: 'Valuation' },
     { id: 'trajectory', label: 'Price Predictor' },
-    { id: 'rent', label: 'Rent' },
     { id: 'trends', label: 'Market Trends' },
     { id: 'about', label: 'About' },
   ];

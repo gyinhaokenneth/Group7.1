@@ -15,7 +15,6 @@ import { TopNavBar } from './components/TopNavBar';
 import { Footer } from './components/Footer';
 import { ValuationView } from './components/ValuationView';
 import { PriceTrajectoryPredictor } from './components/PriceTrajectoryPredictor';
-import { RentView } from './components/RentView';
 import { MarketTrendsView } from './components/MarketTrendsView';
 import { AboutView } from './components/AboutView';
 import { BookAppraisalModal } from './components/BookAppraisalModal';
@@ -97,7 +96,6 @@ export default function App() {
     },
   ]);
 
-  const [favoritedIds, setFavoritedIds] = useState<string[]>(['prop-1', 'prop-3']);
   const [bookings, setBookings] = useState<any[]>([
     {
       id: 'APP-842910',
@@ -138,22 +136,12 @@ export default function App() {
     setSavedPredictions((prev) => [prediction, ...prev]);
   };
 
-  const handleToggleFavorite = (propertyId: string) => {
-    setFavoritedIds((prev) =>
-      prev.includes(propertyId) ? prev.filter((id) => id !== propertyId) : [...prev, propertyId]
-    );
-  };
-
   const handleRemoveValuation = (id: string) => {
     setSavedValuations((prev) => prev.filter((item) => item.id !== id));
   };
 
   const handleRemovePrediction = (id: string) => {
     setSavedPredictions((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleRemoveFavorite = (id: string) => {
-    setFavoritedIds((prev) => prev.filter((pId) => pId !== id));
   };
 
   const handleBookingConfirmed = (booking: any) => {
@@ -191,14 +179,6 @@ export default function App() {
             onOpenBookAppraisal={handleOpenBookAppraisal}
             onSavePrediction={handleSavePrediction}
             initialParams={trajectoryPrefill}
-          />
-        )}
-
-        {currentTab === 'rent' && (
-          <RentView
-            onOpenBookAppraisal={() => handleOpenBookAppraisal()}
-            onFavoriteToggle={handleToggleFavorite}
-            favoritedIds={favoritedIds}
           />
         )}
 
@@ -244,7 +224,6 @@ export default function App() {
         onClose={() => setIsAccountOpen(false)}
         savedValuations={savedValuations}
         savedPredictions={savedPredictions}
-        favoritedIds={favoritedIds}
         bookings={bookings}
         onNavigateTab={(tab) => {
           setCurrentTab(tab);
@@ -252,7 +231,6 @@ export default function App() {
         }}
         onRemoveValuation={handleRemoveValuation}
         onRemovePrediction={handleRemovePrediction}
-        onRemoveFavorite={handleRemoveFavorite}
       />
     </div>
   );

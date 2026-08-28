@@ -1,4 +1,4 @@
-export type TabType = 'valuation' | 'trajectory' | 'rent' | 'trends' | 'about';
+export type TabType = 'valuation' | 'trajectory' | 'trends' | 'about';
 
 export type UserPersonaRole = 'buyer' | 'seller' | 'investor';
 

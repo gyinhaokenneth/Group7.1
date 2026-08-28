@@ -7,7 +7,6 @@ const DISQUS_SHORTNAME = 'testing-mpmo7rcwjp';
 const THREAD_TITLES: Record<TabType, string> = {
   valuation: 'Residential Property Analytics & Appraisal',
   trajectory: 'Price Trajectory Predictor',
-  rent: 'Rental Listings',
   trends: 'Market Trends',
   about: 'About EstateAnalytics',
 };

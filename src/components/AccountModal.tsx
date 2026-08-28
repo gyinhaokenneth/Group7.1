@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, User, Bookmark, Heart, Calendar, ArrowUpRight, Trash2, TrendingUp } from 'lucide-react';
 import { ValuationResult, ValuationFormValues, TabType, SavedTrajectoryPrediction } from '../types';
-import { PROPERTIES_DATA } from '../data/properties';
 
 interface SavedValuationItem {
   id: string;
@@ -14,12 +13,10 @@ interface AccountModalProps {
   onClose: () => void;
   savedValuations: SavedValuationItem[];
   savedPredictions?: SavedTrajectoryPrediction[];
-  favoritedIds: string[];
   bookings: any[];
   onNavigateTab: (tab: TabType) => void;
   onRemoveValuation?: (id: string) => void;
   onRemovePrediction?: (id: string) => void;
-  onRemoveFavorite?: (id: string) => void;
 }
 
 export const AccountModal: React.FC<AccountModalProps> = ({
@@ -27,18 +24,15 @@ export const AccountModal: React.FC<AccountModalProps> = ({
   onClose,
   savedValuations,
   savedPredictions = [],
-  favoritedIds,
   bookings,
   onNavigateTab,
   onRemoveValuation,
   onRemovePrediction,
-  onRemoveFavorite,
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'valuations' | 'predictions' | 'rentals' | 'appraisals'>('valuations');
+  const [activeSubTab, setActiveSubTab] = useState<'valuations' | 'predictions' | 'appraisals'>('valuations');
 
   if (!isOpen) return null;
 
-  const favoritedProperties = PROPERTIES_DATA.filter((p) => favoritedIds.includes(p.id));
 
   return (
     <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
@@ -91,16 +85,6 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             }`}
           >
             Trajectories ({savedPredictions.length})
-          </button>
-          <button
-            onClick={() => setActiveSubTab('rentals')}
-            className={`pb-2.5 cursor-pointer font-sans text-[11px] font-bold uppercase tracking-[0.2em] transition-colors ${
-              activeSubTab === 'rentals'
-                ? 'text-[#1A1A1A] border-b-2 border-[#8C7355]'
-                : 'text-[#1A1A1A]/50 hover:text-[#1A1A1A]'
-            }`}
-          >
-            Rentals ({favoritedProperties.length})
           </button>
           <button
             onClick={() => setActiveSubTab('appraisals')}
@@ -236,66 +220,6 @@ export const AccountModal: React.FC<AccountModalProps> = ({
         )}
 
         {/* Tab Content: Saved Rentals */}
-        {activeSubTab === 'rentals' && (
-          <div className="space-y-3">
-            {favoritedProperties.length === 0 ? (
-              <div className="text-center py-10 bg-[#F5F2ED]/30 rounded-sm border border-[#1A1A1A]/10">
-                <Heart size={28} className="mx-auto text-[#1A1A1A]/40 mb-2" />
-                <p className="font-serif text-[16px] text-[#1A1A1A]">No bookmarked residences</p>
-                <p className="font-serif text-[13px] text-[#1A1A1A]/60 mb-4">Click the bookmark icon on any curated residence to store it here.</p>
-                <button
-                  onClick={() => {
-                    onClose();
-                    onNavigateTab('rent');
-                  }}
-                  className="bg-[#1A1A1A] text-[#F5F2ED] px-5 py-2.5 rounded-sm font-sans text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#8C7355] transition-colors"
-                >
-                  Browse Curated Residences
-                </button>
-              </div>
-            ) : (
-              favoritedProperties.map((prop) => (
-                <div
-                  key={prop.id}
-                  className="p-4 bg-[#F5F2ED]/40 rounded-sm border border-[#1A1A1A]/10 flex items-center justify-between gap-4 hover:border-[#1A1A1A]/20 transition-all"
-                >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={prop.image}
-                      alt={prop.title}
-                      className="w-16 h-16 rounded-sm object-cover border border-[#1A1A1A]/10"
-                    />
-                    <div>
-                      <h4 className="font-serif text-[18px] font-normal text-[#1A1A1A]">
-                        {prop.title}
-                      </h4>
-                      <p className="font-serif text-[13px] text-[#1A1A1A]/65">
-                        {prop.location} • {prop.sqft} sqft • {prop.beds} Bed
-                      </p>
-                      <span className="font-serif text-[15px] font-medium text-[#8C7355]">
-                        {prop.priceFormatted}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {onRemoveFavorite && (
-                      <button
-                        onClick={() => onRemoveFavorite(prop.id)}
-                        className="p-2 text-[#1A1A1A]/40 hover:text-red-700 rounded-sm cursor-pointer transition-colors"
-                        title="Remove from favorites"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
-        {/* Tab Content: Scheduled Consultations */}
         {activeSubTab === 'appraisals' && (
           <div className="space-y-3">
             {bookings.length === 0 ? (
