@@ -25,7 +25,6 @@ import {
   ChevronRight,
   HelpCircle,
 } from 'lucide-react';
-import { PropertyPriceIndexCard } from './PropertyPriceIndexCard';
 import { GeminiInsightPanel } from './GeminiInsightPanel';
 import { SINGAPORE_DISTRICTS, getDistrictPriceStats } from '../data/singaporeDistricts';
 
@@ -1285,12 +1284,6 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 </table>
               </div>
             </div>
-
-            {/* Property Price Index & Location Benchmarks (Spec Section 3 & 5) */}
-            <PropertyPriceIndexCard
-              stats={districtStats}
-              sqft={sqft}
-            />
 
             {/* Gemini AI Econometric Insight Monograph (Role: Buyer) */}
             <GeminiInsightPanel
