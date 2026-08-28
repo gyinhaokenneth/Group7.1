@@ -671,6 +671,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
         <URATransactionFeed
           district={formValues.district}
           districtName={selectedDistrictInfo.name}
+          subjectPropertyType={formValues.propertyType}
         />
       </section>
 

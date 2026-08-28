@@ -7,11 +7,17 @@ import { Building, CheckCircle2, RefreshCw, Layers, MapPin, Filter, ShieldCheck,
 interface URATransactionFeedProps {
   district: string;
   districtName?: string;
+  /**
+   * The Property Type chosen in the valuation form above. Drives the monthly
+   * trend chart. The table keeps its own propTypeFilter below.
+   */
+  subjectPropertyType?: string;
 }
 
 export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
   district,
   districtName,
+  subjectPropertyType,
 }) => {
   const [stats, setStats] = useState<URADistrictStats | null>(null);
   const [transactions, setTransactions] = useState<URATransaction[]>([]);
@@ -217,7 +223,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
       <URAMonthlyPriceChart
         district={district}
         districtName={districtName}
-        propertyType={propTypeFilter}
+        propertyType={subjectPropertyType || propTypeFilter}
         saleType={saleTypeFilter}
         months={6}
       />

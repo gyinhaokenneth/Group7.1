@@ -12,6 +12,14 @@ interface URAMonthlyPriceChartProps {
 }
 
 // Single hue, light -> dark: the range band recedes, the median line leads.
+const PROPERTY_TYPE_LABELS: Record<string, string> = {
+  all: 'All Property Types',
+  private: 'Private (Condo / Apartment)',
+  condo: 'Private (Condo / Apartment)',
+  landed: 'Landed',
+  hdb: 'HDB',
+};
+
 const BAND_FILL = '#C5A880';
 const MEDIAN_INK = '#8C7355';
 const GRID_INK = 'rgba(26,26,26,0.08)';
@@ -51,10 +59,18 @@ function niceDomain(min: number, max: number, count = 4) {
   const raw = span / count;
   const mag = Math.pow(10, Math.floor(Math.log10(raw)));
   const step = ([1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) as number) || mag * 10;
-  const yMin = Math.floor(min / step) * step;
-  const yMax = Math.ceil(max / step) * step;
+
+  // Hug the data rather than snapping the domain out to round multiples.
+  // Snapping collapsed sparse series to a 0-based axis, which made the
+  // "zoomed" median panel span wider than the chart it zooms into.
+  const yMin = min;
+  const yMax = max;
+
+  // Round tick values, placed inside the domain.
   const ticks: number[] = [];
-  for (let v = yMin; v <= yMax + step * 0.5; v += step) ticks.push(Math.round(v));
+  for (let v = Math.ceil(min / step) * step; v <= max + step * 0.001; v += step) {
+    ticks.push(Math.round(v));
+  }
   return { yMin, yMax, ticks };
 }
 
@@ -113,8 +129,20 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
     const meds = populated.map((p) => p.medianPrice as number);
     const lo = Math.min(...meds);
     const hi = Math.max(...meds);
-    const pad = (hi - lo || hi * 0.05) * 0.35;
-    return buildScale(points, lo - pad, hi + pad, MED_PLOT_H, MED_PAD_TOP);
+    const pad = (hi - lo || hi * 0.05) * 0.15;
+
+    // Never let the zoom panel span wider than the chart it zooms into --
+    // on a sparse series the medians sit near the extremes, and unclamped
+    // padding pushed the "zoomed" axis outside the full min-max range.
+    const outerLo = Math.min(...populated.map((p) => p.minPrice as number));
+    const outerHi = Math.max(...populated.map((p) => p.maxPrice as number));
+    return buildScale(
+      points,
+      Math.max(lo - pad, outerLo),
+      Math.min(hi + pad, outerHi),
+      MED_PLOT_H,
+      MED_PAD_TOP
+    );
   }, [points, populated]);
 
   // Band and median path, broken at months with no transactions so a gap
@@ -185,6 +213,9 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
           <h4 className="font-display text-[18px] sm:text-[20px] font-light text-[#1A1A1A] mt-1">
             {district} {districtName ? `(${districtName})` : ''} · Last {months} Months
           </h4>
+          <span className="block font-sans text-[10px] uppercase tracking-[0.18em] text-[#8C7355] mt-1">
+            {PROPERTY_TYPE_LABELS[propertyType] || propertyType}
+          </span>
         </div>
         <button
           type="button"
@@ -217,9 +248,19 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
           Loading URA monthly trend…
         </div>
       ) : populated.length === 0 ? (
-        <div className="h-[260px] flex items-center justify-center gap-2 font-display text-sm text-[#1A1A1A]/60">
+        <div className="h-[260px] flex flex-col items-center justify-center gap-2 px-6 text-center font-display text-sm text-[#1A1A1A]/60">
           <AlertCircle className="w-4 h-4" />
-          No transactions recorded in {district} for this window.
+          {propertyType === 'hdb' ? (
+            <span>
+              URA's transaction registry covers <strong>private residential</strong> property only.
+              HDB resale transactions are published separately by HDB and are not available here.
+            </span>
+          ) : (
+            <span>
+              No {PROPERTY_TYPE_LABELS[propertyType]?.toLowerCase() || propertyType} transactions
+              recorded in {district} for this window.
+            </span>
+          )}
         </div>
       ) : showTable ? (
         <div className="overflow-x-auto">
