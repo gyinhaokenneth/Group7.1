@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
-import uraHandler from './api/ura.js';
+import uraHandler from './api/_ura-core.js';
 import insightHandler from './api/insight.js';
 
 async function startServer() {

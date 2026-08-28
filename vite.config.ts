@@ -28,7 +28,7 @@ function apiServerPlugin(): Plugin {
       server.middlewares.use('/api/ura', async (req: any, res: any, next: any) => {
         polyfillRes(res);
         try {
-          const handlerModule = await import('./api/ura.js');
+          const handlerModule = await import('./api/_ura-core.js');
           await handlerModule.default(req, res);
         } catch (err: any) {
           console.error('API URA error:', err);
