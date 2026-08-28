@@ -35,6 +35,11 @@ async function startServer() {
     }
   });
 
+  // Unmatched API routes must 404 as JSON, not fall through to the SPA fallback
+  app.all('/api/*', (req, res) => {
+    res.status(404).json({ error: 'Not Found', path: req.originalUrl });
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
