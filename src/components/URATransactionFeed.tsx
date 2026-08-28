@@ -2,27 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { URADistrictStats, URATransaction, URAStatusResponse } from '../types';
 import { fetchURADistrictStats, fetchURATransactions, fetchURAStatus, syncAllURABatches } from '../services/uraService';
 import { URAMonthlyPriceChart } from './URAMonthlyPriceChart';
-import { Building, CheckCircle2, RefreshCw, Layers, MapPin, ArrowUpRight, Filter, ShieldCheck, Database, Calendar, Tag } from 'lucide-react';
+import { Building, CheckCircle2, RefreshCw, Layers, MapPin, Filter, ShieldCheck, Database, Calendar, Tag } from 'lucide-react';
 
 interface URATransactionFeedProps {
   district: string;
   districtName?: string;
-  onApplyBenchmark?: (transaction: {
-    district: string;
-    sizeSqft: number;
-    price: number;
-    psf: number;
-    project: string;
-    floorRange: string;
-    tenure: string;
-    propertyType: string;
-  }) => void;
 }
 
 export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
   district,
   districtName,
-  onApplyBenchmark,
 }) => {
   const [stats, setStats] = useState<URADistrictStats | null>(null);
   const [transactions, setTransactions] = useState<URATransaction[]>([]);
@@ -323,7 +312,6 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
               <th className="py-2.5 px-3">Floor</th>
               <th className="py-2.5 px-3">Price</th>
               <th className="py-2.5 px-3">PSF</th>
-              <th className="py-2.5 px-3 text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#1A1A1A]/5 text-xs font-display">
@@ -367,37 +355,11 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
                     <span className="font-medium text-[#8C7355]">${tx.psf.toLocaleString()}</span>
                     <span className="text-[10px] text-[#1A1A1A]/60"> psf</span>
                   </td>
-                  <td className="py-2.5 px-3 text-right whitespace-nowrap">
-                    {onApplyBenchmark ? (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          onApplyBenchmark({
-                            district: tx.district,
-                            sizeSqft: tx.areaSqft,
-                            price: tx.price,
-                            psf: tx.psf,
-                            project: tx.project,
-                            floorRange: tx.floorRange,
-                            tenure: tx.tenure,
-                            propertyType: tx.propertyType,
-                          })
-                        }
-                        className="inline-flex items-center gap-1 text-[11px] font-display text-[#8C7355] hover:text-[#1A1A1A] bg-white border border-[#1A1A1A]/15 hover:border-[#8C7355] px-2 py-1 rounded-xs transition-colors cursor-pointer"
-                        title="Use unit attributes as baseline for Valuation Calculator"
-                      >
-                        <span>Apply</span>
-                        <ArrowUpRight className="w-3 h-3" />
-                      </button>
-                    ) : (
-                      <span className="text-[10px] text-[#1A1A1A]/60 font-sans">{tx.tenure}</span>
-                    )}
-                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-[#1A1A1A]/60 font-display">
+                <td colSpan={7} className="py-8 text-center text-[#1A1A1A]/60 font-display">
                   No transactions match current filters.
                 </td>
               </tr>
