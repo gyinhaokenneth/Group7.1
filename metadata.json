@@ -1,0 +1,6 @@
+{
+  "name": "EstateAnalytics",
+  "description": "Precise property valuation, forward price trajectory prediction for home buyers, market trends, rental discoveries, and appraisal insights for modern real estate investors.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

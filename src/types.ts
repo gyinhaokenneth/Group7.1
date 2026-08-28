@@ -1,0 +1,138 @@
+export type TabType = 'valuation' | 'trajectory' | 'rent' | 'trends' | 'about';
+
+export type PropertyType = 'apartment' | 'condominium' | 'landed';
+
+export type TrajectoryScenario = 'conservative' | 'baseline' | 'accelerated' | 'historical' | 'custom';
+
+export interface TrajectoryPredictionParams {
+  currentPrice: number;
+  sqft: number;
+  propertyType: 'private' | 'landed' | 'hdb' | string;
+  district: string;
+  holdingYears: number;
+  scenario: TrajectoryScenario;
+  customAnnualGrowth: number;
+  includeRentalYield: boolean;
+  estimatedGrossYield: number;
+  mortgageInterestRate: number;
+  downPaymentPct: number;
+}
+
+export interface TrajectoryYearData {
+  year: number;
+  calendarYear: number;
+  projectedValue: number;
+  projectedValueLow: number;
+  projectedValueHigh: number;
+  projectedPsf: number;
+  capitalGain: number;
+  gainPct: number;
+  cumulativeRentalIncome: number;
+  netEquity: number;
+  remainingMortgage: number;
+}
+
+export interface TrajectoryPredictionResult {
+  params: TrajectoryPredictionParams;
+  startPrice: number;
+  finalProjectedValue: number;
+  finalProjectedValueLow: number;
+  finalProjectedValueHigh: number;
+  totalCapitalGain: number;
+  totalGainPct: number;
+  annualizedCAGR: number;
+  finalPsf: number;
+  yearlyBreakdown: TrajectoryYearData[];
+  cumulativeRent: number;
+  estimatedNetProfit: number;
+  confidenceRating: number;
+  recommendationTag: string;
+  timestamp: string;
+}
+
+export interface SavedTrajectoryPrediction {
+  id: string;
+  title: string;
+  result: TrajectoryPredictionResult;
+  createdAt: string;
+}
+
+export interface Property {
+  id: string;
+  title: string;
+  price: number; // monthly rent in USD
+  priceFormatted: string;
+  location: string;
+  district: string;
+  sqft: number;
+  beds: number;
+  baths: number;
+  mrtDist: string;
+  image: string;
+  tag?: 'High Value' | 'New Listing' | 'Exclusive' | 'Price Drop';
+  tagColor?: 'tertiary' | 'secondary' | 'primary';
+  propertyType: PropertyType;
+  facing: 'North' | 'South' | 'East' | 'West';
+  amenities: string[];
+  description: string;
+  yearBuilt: number;
+  furnished: 'Fully Furnished' | 'Partial' | 'Unfurnished';
+}
+
+export interface ValuationFormValues {
+  propertyType: string;
+  size: number | '';
+  facing: string;
+  transportProximity: string;
+  district?: string;
+  condition?: string;
+  bedrooms?: number;
+}
+
+export interface ValuationResult {
+  estimatedMin: number;
+  estimatedMax: number;
+  estimatedMedian: number;
+  psfMin: number;
+  psfMax: number;
+  confidenceScore: number;
+  annualYieldRate: number;
+  monthlyRentalEstimate: number;
+  facingFactorPct: number;
+  transitFactorPct: number;
+  districtMultiplier: number;
+  timestamp: string;
+}
+
+export interface TrendDataPoint {
+  month: string;
+  privateIndex: number; // e.g. 182.4
+  landedIndex: number;  // e.g. 195.8
+  volume: number;
+  changePct: number;
+}
+
+export interface HotspotArea {
+  id: string;
+  name: string;
+  subzone: string;
+  avgPsf: number;
+  yoyGrowth: number;
+  medianRent: number;
+  xPct: number;
+  yPct: number;
+  density: 'High' | 'Very High' | 'Moderate';
+  highlights: string;
+}
+
+export interface AppraisalBooking {
+  fullName: string;
+  email: string;
+  phone: string;
+  propertyAddress: string;
+  propertyType: string;
+  preferredDate: string;
+  preferredTime: string;
+  consultationType: 'in-person' | 'virtual';
+  notes?: string;
+}
