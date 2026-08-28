@@ -206,6 +206,9 @@ export interface URATopProject {
   street: string;
   transactionCount: number;
   medianPsf: number;
+  medianSqft: number;
+  minSqft: number;
+  maxSqft: number;
   latestDate: string;
   latestPrice: number;
   latestPsf: number;

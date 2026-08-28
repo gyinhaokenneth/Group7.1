@@ -432,6 +432,7 @@ export async function getDistrictStatistics(districtCode) {
             street: p.street,
             psfs: [],
             prices: [],
+            areas: [],
             latestDate: enriched.contractDateFormatted,
             latestSortKey: enriched.sortKey,
             latestPrice: enriched.price,
@@ -442,6 +443,7 @@ export async function getDistrictStatistics(districtCode) {
         const projData = projectAgg.get(projKey);
         if (enriched.psf > 0) projData.psfs.push(enriched.psf);
         if (enriched.price > 0) projData.prices.push(enriched.price);
+        if (enriched.areaSqft > 0) projData.areas.push(enriched.areaSqft);
         if (enriched.sortKey > projData.latestSortKey) {
           projData.latestSortKey = enriched.sortKey;
           projData.latestDate = enriched.contractDateFormatted;
@@ -484,11 +486,17 @@ export async function getDistrictStatistics(districtCode) {
     .map((p) => {
       const sortedPsfs = p.psfs.sort((a, b) => a - b);
       const projMedianPsf = sortedPsfs.length > 0 ? sortedPsfs[Math.floor(sortedPsfs.length / 2)] : p.latestPsf;
+      const sortedAreas = p.areas.sort((a, b) => a - b);
+      const projMedianSqft =
+        sortedAreas.length > 0 ? sortedAreas[Math.floor(sortedAreas.length / 2)] : 0;
       return {
         project: p.project,
         street: p.street,
         transactionCount: p.psfs.length,
         medianPsf: projMedianPsf,
+        medianSqft: projMedianSqft,
+        minSqft: sortedAreas.length > 0 ? sortedAreas[0] : 0,
+        maxSqft: sortedAreas.length > 0 ? sortedAreas[sortedAreas.length - 1] : 0,
         latestDate: p.latestDate,
         latestPrice: p.latestPrice,
         latestPsf: p.latestPsf,

@@ -30,6 +30,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
   const [saleTypeFilter, setSaleTypeFilter] = useState<'all' | '1' | '2' | '3'>('all');
   const [propTypeFilter, setPropTypeFilter] = useState<string>('all');
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string | null>(null);
+  const [projectSort, setProjectSort] = useState<'txns' | 'area'>('txns');
 
   // Load status and district stats
   const loadData = useCallback(async () => {
@@ -71,6 +72,14 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
       setSyncingAll(false);
     }
   };
+
+  // Developments, ordered by the active sort. Sorting a copy keeps the
+  // fetched stats object untouched.
+  const sortedProjects = [...(stats?.topProjects || [])].sort((a, b) =>
+    projectSort === 'area'
+      ? (b.medianSqft || 0) - (a.medianSqft || 0)
+      : b.transactionCount - a.transactionCount
+  );
 
   // Filter transactions
   const displayedTransactions = transactions.filter((t) => {
@@ -233,8 +242,34 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/70">
-              Most Active Developments in {district} (Click to Filter)
+              {projectSort === 'area' ? 'Largest' : 'Most Active'} Developments in {district} (Click
+              to Filter)
             </span>
+            <div className="flex items-center gap-3">
+              <div
+                className="inline-flex rounded-xs border border-[#1A1A1A]/15 overflow-hidden"
+                role="group"
+                aria-label="Sort developments"
+              >
+                {([
+                  ['txns', 'Transactions'],
+                  ['area', 'Floor Area'],
+                ] as const).map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setProjectSort(key)}
+                    aria-pressed={projectSort === key}
+                    className={`px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.12em] transition-colors cursor-pointer ${
+                      projectSort === key
+                        ? 'bg-[#1A1A1A] text-[#FAF8F5]'
+                        : 'bg-[#FAF8F5] text-[#1A1A1A]/70 hover:text-[#1A1A1A]'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             {selectedProjectFilter && (
               <button
                 type="button"
@@ -244,9 +279,10 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
                 Clear Project Filter
               </button>
             )}
+            </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            {stats.topProjects.slice(0, 8).map((proj) => {
+            {sortedProjects.slice(0, 8).map((proj) => {
               const isSelected = selectedProjectFilter === proj.project;
               return (
                 <button
@@ -264,6 +300,12 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
                     <span>${proj.medianPsf.toLocaleString()} psf</span>
                     <span>•</span>
                     <span>{proj.transactionCount} txns</span>
+                    {proj.medianSqft > 0 && (
+                      <>
+                        <span>•</span>
+                        <span>{proj.medianSqft.toLocaleString()} sqft</span>
+                      </>
+                    )}
                   </div>
                 </button>
               );
