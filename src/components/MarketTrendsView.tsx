@@ -2,9 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { TRAILING_12_MONTHS_TREND, HOTSPOT_AREAS } from '../data/trends';
 import { HotspotArea, TabType } from '../types';
 import { TrendingUp, MapPin, X, ArrowUpRight, Layers, ZoomIn, Info, Sparkles, ArrowRight, Building } from 'lucide-react';
-import { PropertyPriceIndexCard } from './PropertyPriceIndexCard';
-import { URATransactionFeed } from './URATransactionFeed';
-import { SINGAPORE_DISTRICTS, getDistrictPriceStats } from '../data/singaporeDistricts';
+import { SINGAPORE_DISTRICTS } from '../data/singaporeDistricts';
 
 interface MarketTrendsViewProps {
   onOpenBookAppraisal: () => void;
@@ -19,13 +17,6 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
   const [selectedHotspot, setSelectedHotspot] = useState<HotspotArea | null>(null);
   const [showFullMapModal, setShowFullMapModal] = useState(false);
-  const [selectedExplorerDistrict, setSelectedExplorerDistrict] = useState<string>('D09');
-  const [selectedExplorerPropType, setSelectedExplorerPropType] = useState<'private' | 'landed' | 'hdb'>('private');
-  const [explorerSqft, setExplorerSqft] = useState<number>(1200);
-
-  const explorerStats = useMemo(() => {
-    return getDistrictPriceStats(selectedExplorerDistrict, selectedExplorerPropType, explorerSqft);
-  }, [selectedExplorerDistrict, selectedExplorerPropType, explorerSqft]);
 
   // SVG Chart sizing
   const chartWidth = 720;
@@ -496,99 +487,6 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                   </button>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* District Benchmark & Price Index Explorer (Spec Section 3 & 5) */}
-        <div className="mt-14 space-y-6">
-          <div className="bg-[#FFFFFF] p-6 sm:p-8 rounded-sm border border-[#1A1A1A]/10 shadow-[0_10px_30px_-10px_rgba(26,26,26,0.05)]">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#1A1A1A]/10 pb-6 mb-6">
-              <div>
-                <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-1">
-                  Location Specific Price Index Explorer • Spec Section 3 & 5
-                </span>
-                <h3 className="font-display text-[26px] sm:text-[30px] font-light text-[#1A1A1A]">
-                  Singapore National vs District Benchmark Index
-                </h3>
-                <p className="font-display text-[14px] text-[#1A1A1A]/70 max-w-2xl mt-1">
-                  Compare the official National Property Price Index against individual planning sectors. Query minimum, median, and maximum transaction prices across Core Central, Fringe, and Suburban zones.
-                </p>
-              </div>
-
-              {/* Selector Controls */}
-              <div className="flex flex-wrap items-center gap-3">
-                <div>
-                  <label className="block font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/70 mb-1">
-                    District
-                  </label>
-                  <select
-                    value={selectedExplorerDistrict}
-                    onChange={(e) => setSelectedExplorerDistrict(e.target.value)}
-                    className="bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-display text-[#1A1A1A] cursor-pointer"
-                  >
-                    <optgroup label="Core Central Region (CCR)">
-                      <option value="D01">D01 - Marina Bay / Raffles</option>
-                      <option value="D02">D02 - Chinatown / Tanjong Pagar</option>
-                      <option value="D04">D04 - Sentosa / Harbourfront</option>
-                      <option value="D09">D09 - Orchard / River Valley</option>
-                      <option value="D10">D10 - Bukit Timah / Holland</option>
-                      <option value="D11">D11 - Newton / Novena</option>
-                    </optgroup>
-                    <optgroup label="Rest of Central Region (RCR)">
-                      <option value="D03">D03 - Queenstown / Tiong Bahru</option>
-                      <option value="D05">D05 - Buona Vista / Clementi</option>
-                      <option value="D12">D12 - Toa Payoh / Balestier</option>
-                      <option value="D14">D14 - Paya Lebar / Eunos</option>
-                      <option value="D15">D15 - East Coast / Marine Parade</option>
-                      <option value="D20">D20 - Bishan / Ang Mo Kio</option>
-                    </optgroup>
-                    <optgroup label="Outside Central Region (OCR)">
-                      <option value="D19">D19 - Serangoon / Hougang / Punggol</option>
-                      <option value="D22">D22 - Jurong / Lakeside</option>
-                      <option value="D23">D23 - Bukit Batok / Hillview</option>
-                      <option value="D27">D27 - Yishun / Canberra</option>
-                    </optgroup>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/70 mb-1">
-                    Property Type
-                  </label>
-                  <select
-                    value={selectedExplorerPropType}
-                    onChange={(e) => setSelectedExplorerPropType(e.target.value as any)}
-                    className="bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-display text-[#1A1A1A] cursor-pointer"
-                  >
-                    <option value="private">Private Condominium</option>
-                    <option value="landed">Landed Housing</option>
-                    <option value="hdb">HDB Resale</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/70 mb-1">
-                    Floor Area (Sqft)
-                  </label>
-                  <input
-                    type="number"
-                    value={explorerSqft}
-                    onChange={(e) => setExplorerSqft(Number(e.target.value) || 1200)}
-                    className="w-24 bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-display text-[#1A1A1A]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <PropertyPriceIndexCard stats={explorerStats} sqft={explorerSqft} />
-
-            {/* Official Singapore URA DataService Integration */}
-            <div className="mt-8">
-              <URATransactionFeed
-                district={selectedExplorerDistrict}
-                districtName={explorerStats.districtName}
-              />
             </div>
           </div>
         </div>
