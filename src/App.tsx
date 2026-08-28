@@ -21,6 +21,7 @@ import { AboutView } from './components/AboutView';
 import { BookAppraisalModal } from './components/BookAppraisalModal';
 import { NotificationsModal } from './components/NotificationsModal';
 import { AccountModal } from './components/AccountModal';
+import { DisqusComments } from './components/DisqusComments';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<TabType>('valuation');
@@ -214,6 +215,9 @@ export default function App() {
           />
         )}
       </div>
+
+      {/* Disqus discussion at the bottom of every screen */}
+      <DisqusComments currentTab={currentTab} />
 
       {/* Shared Footer across all screens */}
       <Footer />
