@@ -47,7 +47,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
   // Form Values State according to technical specification
   const [formValues, setFormValues] = useState<ValuationFormValues>({
     role: 'buyer',
-    district: 'D09',
+    district: 'D19',
     propertyType: 'private',
     subType: 'Condominium',
     size: 1200,
