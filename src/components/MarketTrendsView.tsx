@@ -83,11 +83,11 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
           <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
             Macro Trends & Capital Flows • Issue No. 042
           </span>
-          <h1 className="font-serif text-[36px] md:text-[44px] font-light text-[#1A1A1A] mb-3">
+          <h1 className="font-display text-[36px] md:text-[44px] font-light text-[#1A1A1A] mb-3">
             Market Trends & Insights
           </h1>
           <div className="editorial-rule my-3" />
-          <p className="font-serif text-[17px] text-[#1A1A1A]/75 max-w-3xl leading-relaxed">
+          <p className="font-display text-[17px] text-[#1A1A1A]/75 max-w-3xl leading-relaxed">
             Analyze price movements, yield compressions, and emerging value hotspots across the urban real estate sector over the trailing 12-month ledger.
           </p>
         </section>
@@ -102,7 +102,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                   <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-1">
                     Temporal Valuation Index
                   </span>
-                  <h2 className="font-serif text-[24px] font-normal text-[#1A1A1A]">
+                  <h2 className="font-display text-[24px] font-normal text-[#1A1A1A]">
                     Price Index Trajectory
                   </h2>
                 </div>
@@ -180,7 +180,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                           fontSize="10"
                           fill="#1A1A1A"
                           fillOpacity="0.45"
-                          fontFamily="Hanken Grotesk"
+                          fontFamily="Inter"
                         >
                           {val}
                         </text>
@@ -238,7 +238,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                           fontWeight={isHovered ? '700' : '400'}
                           fill={isHovered ? '#1A1A1A' : '#1A1A1A'}
                           fillOpacity={isHovered ? '1' : '0.5'}
-                          fontFamily="Hanken Grotesk"
+                          fontFamily="Inter"
                         >
                           {d.month}
                         </text>
@@ -294,7 +294,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                     <span className="font-sans text-[11px] uppercase font-bold tracking-wider text-[#1A1A1A]">
                       Private Condominium:
                     </span>
-                    <span className="font-serif text-[#8C7355] font-semibold text-sm">
+                    <span className="font-display text-[#8C7355] font-semibold text-sm">
                       {hoveredPointIndex !== null
                         ? `${TRAILING_12_MONTHS_TREND[hoveredPointIndex].privateIndex} pts`
                         : `${TRAILING_12_MONTHS_TREND[TRAILING_12_MONTHS_TREND.length - 1].privateIndex} pts`}
@@ -306,7 +306,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                     <span className="font-sans text-[11px] uppercase font-bold tracking-wider text-[#1A1A1A]">
                       Landed Housing:
                     </span>
-                    <span className="font-serif text-[#1A1A1A] font-semibold text-sm">
+                    <span className="font-display text-[#1A1A1A] font-semibold text-sm">
                       {hoveredPointIndex !== null
                         ? `${TRAILING_12_MONTHS_TREND[hoveredPointIndex].landedIndex} pts`
                         : `${TRAILING_12_MONTHS_TREND[TRAILING_12_MONTHS_TREND.length - 1].landedIndex} pts`}
@@ -336,10 +336,10 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                     <TrendingUp size={15} />
                   </span>
                 </div>
-                <div className="font-serif text-[44px] font-light text-[#1A1A1A] leading-none mb-3">
+                <div className="font-display text-[44px] font-light text-[#1A1A1A] leading-none mb-3">
                   +2.4%
                 </div>
-                <p className="font-serif text-[15px] leading-relaxed text-[#1A1A1A]/75">
+                <p className="font-display text-[15px] leading-relaxed text-[#1A1A1A]/75">
                   Private residential sector demonstrating sustained pricing resilience amidst structural capital inflows.
                 </p>
               </div>
@@ -351,11 +351,11 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-2">
                   Average Gross Yield
                 </span>
-                <div className="font-serif text-[44px] font-light text-[#8C7355] leading-none mb-4">
+                <div className="font-display text-[44px] font-light text-[#8C7355] leading-none mb-4">
                   3.8%
                 </div>
 
-                <div className="border-t border-[#1A1A1A]/10 pt-3 space-y-2 font-serif text-[14px]">
+                <div className="border-t border-[#1A1A1A]/10 pt-3 space-y-2 font-display text-[14px]">
                   <div className="flex justify-between items-center text-[#1A1A1A]/80">
                     <span>Core Central Region (CCR)</span>
                     <span className="font-sans font-semibold text-xs text-[#1A1A1A]">2.9%</span>
@@ -380,7 +380,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-1">
                   Spatial Density Analysis
                 </span>
-                <h2 className="font-serif text-[24px] sm:text-[28px] font-light text-[#1A1A1A]">
+                <h2 className="font-display text-[24px] sm:text-[28px] font-light text-[#1A1A1A]">
                   Proximity Value Hotspots
                 </h2>
               </div>
@@ -457,7 +457,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                       <span className="font-sans text-[9px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block">
                         {selectedHotspot.density} Density Corridor
                       </span>
-                      <h4 className="font-serif text-[20px] font-normal text-[#1A1A1A] leading-snug">
+                      <h4 className="font-display text-[20px] font-normal text-[#1A1A1A] leading-snug">
                         {selectedHotspot.name}
                       </h4>
                       <p className="font-sans text-[11px] text-[#1A1A1A]/60">{selectedHotspot.subzone}</p>
@@ -473,15 +473,15 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                   <div className="grid grid-cols-2 gap-2 bg-[#FFFFFF] p-3 rounded-sm border border-[#1A1A1A]/10 my-3 text-[12px]">
                     <div>
                       <span className="font-sans text-[10px] uppercase tracking-wider text-[#1A1A1A]/60">Avg Transaction</span>
-                      <div className="font-serif font-medium text-[16px] text-[#1A1A1A]">${selectedHotspot.avgPsf} psf</div>
+                      <div className="font-display font-medium text-[16px] text-[#1A1A1A]">${selectedHotspot.avgPsf} psf</div>
                     </div>
                     <div>
                       <span className="font-sans text-[10px] uppercase tracking-wider text-[#1A1A1A]/60">YoY Appreciation</span>
-                      <div className="font-serif font-medium text-[16px] text-[#8C7355]">+{selectedHotspot.yoyGrowth}%</div>
+                      <div className="font-display font-medium text-[16px] text-[#8C7355]">+{selectedHotspot.yoyGrowth}%</div>
                     </div>
                   </div>
 
-                  <p className="font-serif text-[13px] text-[#1A1A1A]/80 leading-relaxed mb-3">
+                  <p className="font-display text-[13px] text-[#1A1A1A]/80 leading-relaxed mb-3">
                     {selectedHotspot.highlights}
                   </p>
 
@@ -508,10 +508,10 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-1">
                   Location Specific Price Index Explorer • Spec Section 3 & 5
                 </span>
-                <h3 className="font-serif text-[26px] sm:text-[30px] font-light text-[#1A1A1A]">
+                <h3 className="font-display text-[26px] sm:text-[30px] font-light text-[#1A1A1A]">
                   Singapore National vs District Benchmark Index
                 </h3>
-                <p className="font-serif text-[14px] text-[#1A1A1A]/70 max-w-2xl mt-1">
+                <p className="font-display text-[14px] text-[#1A1A1A]/70 max-w-2xl mt-1">
                   Compare the official National Property Price Index against individual planning sectors. Query minimum, median, and maximum transaction prices across Core Central, Fringe, and Suburban zones.
                 </p>
               </div>
@@ -525,7 +525,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                   <select
                     value={selectedExplorerDistrict}
                     onChange={(e) => setSelectedExplorerDistrict(e.target.value)}
-                    className="bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-serif text-[#1A1A1A] cursor-pointer"
+                    className="bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <optgroup label="Core Central Region (CCR)">
                       <option value="D01">D01 - Marina Bay / Raffles</option>
@@ -559,7 +559,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                   <select
                     value={selectedExplorerPropType}
                     onChange={(e) => setSelectedExplorerPropType(e.target.value as any)}
-                    className="bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-serif text-[#1A1A1A] cursor-pointer"
+                    className="bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <option value="private">Private Condominium</option>
                     <option value="landed">Landed Housing</option>
@@ -575,7 +575,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                     type="number"
                     value={explorerSqft}
                     onChange={(e) => setExplorerSqft(Number(e.target.value) || 1200)}
-                    className="w-24 bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-serif text-[#1A1A1A]"
+                    className="w-24 bg-[#FAF8F5] border border-[#1A1A1A]/20 rounded-xs px-3 py-2 text-sm font-display text-[#1A1A1A]"
                   />
                 </div>
               </div>
@@ -603,10 +603,10 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                   Home Buyer Analytical Toolkit
                 </span>
               </div>
-              <h3 className="font-serif text-[24px] sm:text-[28px] font-light text-[#1A1A1A] mb-2">
+              <h3 className="font-display text-[24px] sm:text-[28px] font-light text-[#1A1A1A] mb-2">
                 Translate Macro Trends into Personal Property Projections
               </h3>
-              <p className="font-serif text-[15px] text-[#1A1A1A]/70 leading-relaxed">
+              <p className="font-display text-[15px] text-[#1A1A1A]/70 leading-relaxed">
                 Connect the historical market indexes and district CAGR trends directly to your prospective acquisition. Simulate 3 to 15-year equity growth, cash flow, and risk corridors.
               </p>
             </div>
@@ -634,10 +634,10 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-1">
                   Cartographic Dossier
                 </span>
-                <h3 className="font-serif text-[28px] font-light text-[#1A1A1A]">
+                <h3 className="font-display text-[28px] font-light text-[#1A1A1A]">
                   Spatial Density & Urban Valuation Map
                 </h3>
-                <p className="font-serif text-[14px] text-[#1A1A1A]/70">
+                <p className="font-display text-[14px] text-[#1A1A1A]/70">
                   High-resolution geospatial transaction cluster overlay across core metro sectors.
                 </p>
               </div>
@@ -660,7 +660,7 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
                 <div
                   key={spot.id}
                   style={{ left: `${spot.xPct}%`, top: `${spot.yPct}%` }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 bg-[#1A1A1A]/95 text-[#F5F2ED] border border-[#8C7355] px-3 py-1 rounded-sm text-[11px] font-serif flex items-center gap-1.5 shadow-lg"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 bg-[#1A1A1A]/95 text-[#F5F2ED] border border-[#8C7355] px-3 py-1 rounded-sm text-[11px] font-display flex items-center gap-1.5 shadow-lg"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#8C7355]" />
                   <span>{spot.name}: ${spot.avgPsf} psf</span>

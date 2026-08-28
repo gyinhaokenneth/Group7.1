@@ -27,7 +27,7 @@ export const Footer: React.FC = () => {
               <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
                 Weekly Intelligence Monograph
               </span>
-              <h3 className="font-serif text-[28px] md:text-[34px] font-light leading-tight text-[#F5F2ED]">
+              <h3 className="font-display text-[28px] md:text-[34px] font-light leading-tight text-[#F5F2ED]">
                 Curated property valuation & spatial indices in your inbox.
               </h3>
             </div>
@@ -66,7 +66,7 @@ export const Footer: React.FC = () => {
                 <Building2 size={18} className="text-[#1A1A1A]" />
               </div>
               <div className="flex flex-col text-left justify-center">
-                <span className="font-serif text-[21px] md:text-[24px] font-normal tracking-tight text-[#F5F2ED] leading-[0.92]">
+                <span className="font-display text-[21px] md:text-[24px] font-normal tracking-tight text-[#F5F2ED] leading-[0.92]">
                   Estate
                 </span>
                 <span className="font-sans text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-[#8C7355] leading-none mt-1">
@@ -142,9 +142,9 @@ export const Footer: React.FC = () => {
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
                   Data Governance
                 </span>
-                <h3 className="font-serif text-[28px] font-light text-[#1A1A1A]">Privacy Policy</h3>
+                <h3 className="font-display text-[28px] font-light text-[#1A1A1A]">Privacy Policy</h3>
                 <div className="h-[1px] w-12 bg-[#1A1A1A]" />
-                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-serif">
+                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-display">
                   EstateAnalytics treats client property data and valuation records with absolute institutional-grade confidentiality. We do not sell or rent proprietary valuation inquiries or ownership portfolios to marketing aggregators. All data is processed on encrypted channels.
                 </p>
                 <div className="pt-4 border-t border-[#1A1A1A]/10">
@@ -163,9 +163,9 @@ export const Footer: React.FC = () => {
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
                   Chartered Protocol
                 </span>
-                <h3 className="font-serif text-[28px] font-light text-[#1A1A1A]">Terms of Service</h3>
+                <h3 className="font-display text-[28px] font-light text-[#1A1A1A]">Terms of Service</h3>
                 <div className="h-[1px] w-12 bg-[#1A1A1A]" />
-                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-serif">
+                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-display">
                   Valuation estimates provided through EstateAnalytics are computed utilizing automated regression models, historical transaction indices, and spatial attributes. They serve as indicative benchmarks and do not substitute for formal physical appraisals certified by chartered valuation surveyors.
                 </p>
                 <div className="pt-4 border-t border-[#1A1A1A]/10">
@@ -184,9 +184,9 @@ export const Footer: React.FC = () => {
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
                   Concierge Desk
                 </span>
-                <h3 className="font-serif text-[28px] font-light text-[#1A1A1A]">Contact Support</h3>
+                <h3 className="font-display text-[28px] font-light text-[#1A1A1A]">Contact Support</h3>
                 <div className="h-[1px] w-12 bg-[#1A1A1A]" />
-                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-serif">
+                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-display">
                   Have inquiries about property valuations, corporate API access, or appraisal scheduling?
                 </p>
                 <div className="bg-[#E2DFD8]/40 p-4 rounded-sm border border-[#1A1A1A]/10 text-[13px] space-y-2 text-[#1A1A1A] font-sans">
@@ -210,9 +210,9 @@ export const Footer: React.FC = () => {
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
                   Institutional Portal
                 </span>
-                <h3 className="font-serif text-[28px] font-light text-[#1A1A1A]">Investor Relations</h3>
+                <h3 className="font-display text-[28px] font-light text-[#1A1A1A]">Investor Relations</h3>
                 <div className="h-[1px] w-12 bg-[#1A1A1A]" />
-                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-serif">
+                <p className="text-[14px] leading-relaxed text-[#1A1A1A]/80 font-display">
                   EstateAnalytics delivers spatial analytics infrastructure for commercial REITs, private wealth family offices, and sovereign real estate desks. Institutional data feeds and customized API sandbox access are available upon accreditation.
                 </p>
                 <div className="pt-4 border-t border-[#1A1A1A]/10">

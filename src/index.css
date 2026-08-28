@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "EB Garamond", Georgia, serif;
-  --font-sans: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Display face: editorial character for headings and prose. */
+  --font-display: "Instrument Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  /* Text face: optimised for small sizes - labels, figures, dense UI. */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   --color-primary: #1A1A1A;
   --color-on-primary: #F5F2ED;
@@ -34,20 +36,20 @@
 body {
   background-color: #F5F2ED;
   color: #1A1A1A;
-  font-family: "Hanken Grotesk", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 /* Editorial Aesthetic Typography Utilities */
 .font-editorial-hero {
-  font-family: "EB Garamond", serif;
+  font-family: "Instrument Sans", sans-serif;
   font-weight: 300;
   line-height: 0.92;
   letter-spacing: -0.03em;
 }
 
 .font-editorial-eyebrow {
-  font-family: "Hanken Grotesk", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -56,7 +58,7 @@ body {
 }
 
 .font-editorial-caps {
-  font-family: "Hanken Grotesk", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;

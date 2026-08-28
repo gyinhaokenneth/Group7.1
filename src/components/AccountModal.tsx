@@ -46,19 +46,19 @@ export const AccountModal: React.FC<AccountModalProps> = ({
 
         {/* Profile Header */}
         <div className="flex items-center gap-4 border-b border-[#1A1A1A]/10 pb-6 mb-6">
-          <div className="w-14 h-14 rounded-sm bg-[#E2DFD8]/60 text-[#1A1A1A] border border-[#8C7355]/30 flex items-center justify-center font-serif text-[20px] font-normal">
+          <div className="w-14 h-14 rounded-sm bg-[#E2DFD8]/60 text-[#1A1A1A] border border-[#8C7355]/30 flex items-center justify-center font-display text-[20px] font-normal">
             JV
           </div>
           <div>
             <div className="flex items-center gap-2.5">
-              <h3 className="font-serif text-[24px] font-light text-[#1A1A1A]">
+              <h3 className="font-display text-[24px] font-light text-[#1A1A1A]">
                 Julian Vance
               </h3>
               <span className="bg-[#8C7355]/15 text-[#8C7355] border border-[#8C7355]/30 font-sans text-[10px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded-sm">
                 Verified Portfolio
               </span>
             </div>
-            <p className="font-serif text-[13px] text-[#1A1A1A]/60 mt-0.5">
+            <p className="font-display text-[13px] text-[#1A1A1A]/60 mt-0.5">
               Executive Private Client • Folio: EA-890214
             </p>
           </div>
@@ -104,8 +104,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             {savedValuations.length === 0 ? (
               <div className="text-center py-10 bg-[#F5F2ED]/30 rounded-sm border border-[#1A1A1A]/10">
                 <Bookmark size={28} className="mx-auto text-[#1A1A1A]/40 mb-2" />
-                <p className="font-serif text-[16px] text-[#1A1A1A]">No archived valuation appraisals</p>
-                <p className="font-serif text-[13px] text-[#1A1A1A]/60 mb-4">Calculate a property appraisal and click Save Valuation.</p>
+                <p className="font-display text-[16px] text-[#1A1A1A]">No archived valuation appraisals</p>
+                <p className="font-display text-[13px] text-[#1A1A1A]/60 mb-4">Calculate a property appraisal and click Save Valuation.</p>
                 <button
                   onClick={() => {
                     onClose();
@@ -129,10 +129,10 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       </span>
                       <span className="font-sans text-[10px] text-[#1A1A1A]/50 uppercase tracking-wider">({item.result.timestamp})</span>
                     </div>
-                    <div className="font-serif text-[24px] font-light text-[#1A1A1A] mt-0.5">
+                    <div className="font-display text-[24px] font-light text-[#1A1A1A] mt-0.5">
                       ${item.result.estimatedMedian.toLocaleString()}
                     </div>
-                    <div className="font-serif text-[13px] text-[#1A1A1A]/65">
+                    <div className="font-display text-[13px] text-[#1A1A1A]/65">
                       Spread: ${item.result.estimatedMin.toLocaleString()} – ${item.result.estimatedMax.toLocaleString()} • Facing: {item.values.facing}
                     </div>
                   </div>
@@ -160,8 +160,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             {savedPredictions.length === 0 ? (
               <div className="text-center py-10 bg-[#F5F2ED]/30 rounded-sm border border-[#1A1A1A]/10">
                 <TrendingUp size={28} className="mx-auto text-[#1A1A1A]/40 mb-2" />
-                <p className="font-serif text-[16px] text-[#1A1A1A]">No archived trajectory predictions</p>
-                <p className="font-serif text-[13px] text-[#1A1A1A]/60 mb-4">Run the forward price trajectory predictor and save your forecast model.</p>
+                <p className="font-display text-[16px] text-[#1A1A1A]">No archived trajectory predictions</p>
+                <p className="font-display text-[13px] text-[#1A1A1A]/60 mb-4">Run the forward price trajectory predictor and save your forecast model.</p>
                 <button
                   onClick={() => {
                     onClose();
@@ -185,10 +185,10 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       </span>
                       <span className="font-sans text-[10px] text-[#1A1A1A]/50 uppercase tracking-wider">({item.createdAt})</span>
                     </div>
-                    <div className="font-serif text-[24px] font-light text-[#1A1A1A] mt-0.5">
+                    <div className="font-display text-[24px] font-light text-[#1A1A1A] mt-0.5">
                       ${item.result.finalProjectedValue.toLocaleString()}
                     </div>
-                    <div className="font-serif text-[13px] text-[#1A1A1A]/65">
+                    <div className="font-display text-[13px] text-[#1A1A1A]/65">
                       Gain: +${item.result.totalCapitalGain.toLocaleString()} (+{item.result.totalGainPct}%) • CAGR: {item.result.annualizedCAGR}% p.a.
                     </div>
                   </div>
@@ -225,8 +225,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             {bookings.length === 0 ? (
               <div className="text-center py-10 bg-[#F5F2ED]/30 rounded-sm border border-[#1A1A1A]/10">
                 <Calendar size={28} className="mx-auto text-[#1A1A1A]/40 mb-2" />
-                <p className="font-serif text-[16px] text-[#1A1A1A]">No active appraisal appointments</p>
-                <p className="font-serif text-[13px] text-[#1A1A1A]/60 mb-4">Book a physical or virtual chartered surveyor consultation.</p>
+                <p className="font-display text-[16px] text-[#1A1A1A]">No active appraisal appointments</p>
+                <p className="font-display text-[13px] text-[#1A1A1A]/60 mb-4">Book a physical or virtual chartered surveyor consultation.</p>
               </div>
             ) : (
               bookings.map((booking) => (
@@ -240,17 +240,17 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       Confirmed
                     </span>
                   </div>
-                  <div className="flex justify-between font-serif text-[13px] text-[#1A1A1A]/75">
+                  <div className="flex justify-between font-display text-[13px] text-[#1A1A1A]/75">
                     <span>Date & Window:</span>
                     <span className="font-medium text-[#1A1A1A]">
                       {booking.preferredDate} ({booking.preferredTime})
                     </span>
                   </div>
-                  <div className="flex justify-between font-serif text-[13px] text-[#1A1A1A]/75">
+                  <div className="flex justify-between font-display text-[13px] text-[#1A1A1A]/75">
                     <span>Appointed Surveyor:</span>
                     <span className="text-[#1A1A1A]">{booking.surveyor}</span>
                   </div>
-                  <div className="flex justify-between font-serif text-[13px] text-[#1A1A1A]/75">
+                  <div className="flex justify-between font-display text-[13px] text-[#1A1A1A]/75">
                     <span>Target Property:</span>
                     <span className="text-[#1A1A1A] text-right truncate max-w-[240px]">
                       {booking.propertyAddress}

@@ -42,7 +42,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
             <Building2 size={18} className="text-[#F5F2ED]" />
           </div>
           <div className="flex flex-col text-left justify-center">
-            <span className="font-serif text-[21px] md:text-[24px] font-normal tracking-tight text-[#1A1A1A] leading-[0.92] group-hover:text-[#8C7355] transition-colors">
+            <span className="font-display text-[21px] md:text-[24px] font-normal tracking-tight text-[#1A1A1A] leading-[0.92] group-hover:text-[#8C7355] transition-colors">
               Estate
             </span>
             <span className="font-sans text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-[#8C7355] leading-none mt-1">

@@ -65,7 +65,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
             </span>
             <div className="flex items-center gap-2">
               <Bell size={16} className="text-[#8C7355]" />
-              <h3 className="font-serif text-[22px] font-light text-[#1A1A1A]">
+              <h3 className="font-display text-[22px] font-light text-[#1A1A1A]">
                 Market Dispatches
               </h3>
             </div>
@@ -104,13 +104,13 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
               }`}
             >
               <div className="flex justify-between items-start gap-2 mb-1">
-                <h4 className="font-serif text-[14px] font-medium flex items-center gap-2">
+                <h4 className="font-display text-[14px] font-medium flex items-center gap-2">
                   {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-[#8C7355] shrink-0" />}
                   <span>{item.title}</span>
                 </h4>
                 <span className="font-sans text-[10px] uppercase tracking-wider text-[#1A1A1A]/50 whitespace-nowrap">{item.time}</span>
               </div>
-              <p className="font-serif text-[13px] text-[#1A1A1A]/70 leading-relaxed pl-3.5">
+              <p className="font-display text-[13px] text-[#1A1A1A]/70 leading-relaxed pl-3.5">
                 {item.description}
               </p>
             </div>

@@ -299,12 +299,12 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
               Real Estate Intelligence • All Singapore Districts
             </span>
-            <h1 className="font-serif text-[34px] sm:text-[42px] md:text-[48px] leading-[1.08] tracking-tight font-light text-[#1A1A1A]">
+            <h1 className="font-display text-[34px] sm:text-[42px] md:text-[48px] leading-[1.08] tracking-tight font-light text-[#1A1A1A]">
               Residential Property <br className="hidden sm:inline" />
               <span className="italic font-normal">Analytics & Appraisal</span>
             </h1>
             <div className="editorial-rule my-1" />
-            <p className="text-[16px] md:text-[17px] leading-[1.65] text-[#1A1A1A]/80 font-serif">
+            <p className="text-[16px] md:text-[17px] leading-[1.65] text-[#1A1A1A]/80 font-display">
               Tailored for <strong>Buyers, Sellers, and Investors</strong>. Compute leasehold decay, evaluate net seller proceeds, benchmark against live URA transaction records, and generate Gemini AI macroeconomic advisories.
             </p>
 
@@ -356,7 +356,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
               </div>
 
               {formError && (
-                <div className="mb-6 p-3 bg-red-50 border-l-2 border-red-500 text-red-800 text-sm font-serif">
+                <div className="mb-6 p-3 bg-red-50 border-l-2 border-red-500 text-red-800 text-sm font-display">
                   {formError}
                 </div>
               )}
@@ -374,7 +374,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     id="form-district"
                     value={formValues.district}
                     onChange={(e) => setFormValues({ ...formValues, district: e.target.value })}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <optgroup label="Core Central Region (CCR)">
                       <option value="D01">D01 - Marina Bay / Boat Quay / Raffles Place</option>
@@ -414,7 +414,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     id="form-prop-type"
                     value={formValues.propertyType}
                     onChange={(e) => setFormValues({ ...formValues, propertyType: e.target.value })}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <option value="private">Private (Condominium / Apartment)</option>
                     <option value="landed">Landed (Bungalow / Semi-D / Terrace)</option>
@@ -443,7 +443,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                       setFormValues({ ...formValues, size: e.target.value === '' ? '' : Number(e.target.value) })
                     }
                     placeholder="e.g. 1200"
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A]"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A]"
                   />
                 </div>
 
@@ -459,7 +459,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     id="form-level"
                     value={formValues.level}
                     onChange={(e) => setFormValues({ ...formValues, level: e.target.value })}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <option value="low">Ground / Low Floor (Level 1–5)</option>
                     <option value="mid">Mid Floor (Level 6–15)</option>
@@ -480,7 +480,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     id="form-tenure"
                     value={formValues.tenure}
                     onChange={(e) => setFormValues({ ...formValues, tenure: e.target.value })}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <option value="freehold">Freehold (Estate in Perpetuity)</option>
                     <option value="999yr">999-Year Leasehold</option>
@@ -511,7 +511,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     onChange={(e) =>
                       setFormValues({ ...formValues, leaseRemainingYears: Number(e.target.value) || 99 })
                     }
-                    className="w-full bg-[#FFFFFF] disabled:bg-[#F5F2ED] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A]"
+                    className="w-full bg-[#FFFFFF] disabled:bg-[#F5F2ED] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A]"
                   />
                 </div>
 
@@ -527,7 +527,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     id="form-facing"
                     value={formValues.facing}
                     onChange={(e) => setFormValues({ ...formValues, facing: e.target.value })}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <option value="north_south">North-South (Optimal Breeze, No West Sun)</option>
                     <option value="sea_view">South / Panoramic Sea View</option>
@@ -549,7 +549,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     id="form-amenities"
                     value={formValues.amenityProximity}
                     onChange={(e) => setFormValues({ ...formValues, amenityProximity: e.target.value })}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <option value="mrt_300m">&lt; 300m to MRT Station (Sheltered Walk)</option>
                     <option value="school_1km">Within 1km of Top Primary School</option>
@@ -570,7 +570,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     id="form-condition"
                     value={formValues.condition}
                     onChange={(e) => setFormValues({ ...formValues, condition: e.target.value })}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-display text-[#1A1A1A] cursor-pointer"
                   >
                     <option value="well_maintained">Well-Maintained (Move-in Condition, minor touch-ups)</option>
                     <option value="designer">High-End Designer Renovation (&lt; 3 years old)</option>
@@ -600,7 +600,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                           onChange={(e) =>
                             setFormValues({ ...formValues, outstandingLoan: Number(e.target.value) || 0 })
                           }
-                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-serif"
+                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-display"
                         />
                       </div>
                       <div>
@@ -613,7 +613,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                           onChange={(e) =>
                             setFormValues({ ...formValues, cpfRefund: Number(e.target.value) || 0 })
                           }
-                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-serif"
+                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-display"
                         />
                       </div>
                       <div>
@@ -625,7 +625,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                           onChange={(e) =>
                             setFormValues({ ...formValues, sellerHoldingYears: Number(e.target.value) || 4 })
                           }
-                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-serif"
+                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-display"
                         >
                           <option value="1">≤ 1 Year (12% SSD)</option>
                           <option value="2">1 to 2 Years (8% SSD)</option>
@@ -721,10 +721,10 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
               Forward Horizon Modeling • Spec Section 4
             </span>
-            <h3 className="font-serif text-[28px] md:text-[34px] font-light text-[#F5F2ED] mb-3">
+            <h3 className="font-display text-[28px] md:text-[34px] font-light text-[#F5F2ED] mb-3">
               Home Buyer Price Trajectory & Confidence Predictor
             </h3>
-            <p className="font-serif text-[15px] md:text-[16px] text-[#F5F2ED]/75 leading-relaxed">
+            <p className="font-display text-[15px] md:text-[16px] text-[#F5F2ED]/75 leading-relaxed">
               Model price trajectories with 90% confidence intervals for {formValues.district} across 1 to 10 years. Includes loan amortization curves, rental cashflow yield compounding, and Seller's Stamp Duty (SSD) holding milestones.
             </p>
           </div>
@@ -761,7 +761,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
                   Automated Valuation Report • {calculationResult.role.toUpperCase()}
                 </span>
-                <h3 className="font-serif text-[28px] font-light text-[#1A1A1A]">
+                <h3 className="font-display text-[28px] font-light text-[#1A1A1A]">
                   Certified Market Valuation
                 </h3>
               </div>
@@ -786,11 +786,11 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                 </span>
               </div>
 
-              <div className="font-serif text-[38px] sm:text-[46px] font-light text-[#1A1A1A] leading-none mb-2">
+              <div className="font-display text-[38px] sm:text-[46px] font-light text-[#1A1A1A] leading-none mb-2">
                 ${calculationResult.estimatedMedian.toLocaleString()}
               </div>
 
-              <div className="font-serif text-[15px] text-[#1A1A1A]/70">
+              <div className="font-display text-[15px] text-[#1A1A1A]/70">
                 Recommended Price Corridor:{' '}
                 <strong className="text-[#1A1A1A] font-semibold">
                   ${calculationResult.estimatedMin.toLocaleString()} – ${calculationResult.estimatedMax.toLocaleString()}
@@ -813,25 +813,25 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mb-4">
                   <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
                     <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">Selling Price</span>
-                    <span className="font-serif text-[16px] text-[#1A1A1A]">
+                    <span className="font-display text-[16px] text-[#1A1A1A]">
                       ${calculationResult.sellerNetProceeds.sellingPrice.toLocaleString()}
                     </span>
                   </div>
                   <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
                     <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">Bank Loan</span>
-                    <span className="font-serif text-[16px] text-red-700">
+                    <span className="font-display text-[16px] text-red-700">
                       -${calculationResult.sellerNetProceeds.outstandingLoan.toLocaleString()}
                     </span>
                   </div>
                   <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
                     <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">CPF Refund</span>
-                    <span className="font-serif text-[16px] text-red-700">
+                    <span className="font-display text-[16px] text-red-700">
                       -${calculationResult.sellerNetProceeds.cpfRefund.toLocaleString()}
                     </span>
                   </div>
                   <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
                     <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">Agent (2%) + Legal</span>
-                    <span className="font-serif text-[16px] text-red-700">
+                    <span className="font-display text-[16px] text-red-700">
                       -${(calculationResult.sellerNetProceeds.agentCommission + calculationResult.sellerNetProceeds.legalFee).toLocaleString()}
                     </span>
                   </div>
@@ -841,7 +841,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                   <span className="font-sans text-[11px] font-bold uppercase tracking-[0.15em] text-[#1A1A1A]">
                     Estimated Net Cash in Hand
                   </span>
-                  <span className="font-serif text-[24px] font-normal text-emerald-800">
+                  <span className="font-display text-[24px] font-normal text-emerald-800">
                     ${calculationResult.sellerNetProceeds.netCashInHand.toLocaleString()}
                   </span>
                 </div>
@@ -852,7 +852,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
             <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6 text-[14px]">
               <div className="bg-[#FFFFFF] p-4 rounded-sm border border-[#1A1A1A]/10">
                 <div className="font-sans text-[#8C7355] text-[10px] uppercase font-bold tracking-[0.15em]">Unit PSF</div>
-                <div className="font-serif text-[22px] font-normal text-[#1A1A1A] mt-1">
+                <div className="font-display text-[22px] font-normal text-[#1A1A1A] mt-1">
                   ${calculationResult.psfMedian} psf
                 </div>
                 <div className="font-sans text-[11px] text-[#1A1A1A]/60 mt-0.5">
@@ -862,7 +862,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
 
               <div className="bg-[#FFFFFF] p-4 rounded-sm border border-[#1A1A1A]/10">
                 <div className="font-sans text-[#8C7355] text-[10px] uppercase font-bold tracking-[0.15em]">Est. Gross Rental</div>
-                <div className="font-serif text-[22px] font-normal text-[#8C7355] mt-1">
+                <div className="font-display text-[22px] font-normal text-[#8C7355] mt-1">
                   ${calculationResult.monthlyRentalEstimate.toLocaleString()}/mo
                 </div>
                 <div className="font-sans text-[11px] text-[#1A1A1A]/60 mt-0.5">
@@ -872,7 +872,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
 
               <div className="bg-[#FFFFFF] p-4 rounded-sm border border-[#1A1A1A]/10 col-span-2 sm:col-span-1">
                 <div className="font-sans text-[#8C7355] text-[10px] uppercase font-bold tracking-[0.15em]">Location Index</div>
-                <div className="font-serif text-[22px] font-normal text-[#1A1A1A] mt-1">
+                <div className="font-display text-[22px] font-normal text-[#1A1A1A] mt-1">
                   {calculationResult.districtPriceIndex} pts
                 </div>
                 <div className="font-sans text-[11px] text-[#1A1A1A]/60 mt-0.5">

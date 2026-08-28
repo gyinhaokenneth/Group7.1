@@ -107,10 +107,10 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
                 Connected
               </span>
             </div>
-            <h3 className="font-serif text-[22px] sm:text-[26px] font-light text-[#1A1A1A] mt-0.5">
+            <h3 className="font-display text-[22px] sm:text-[26px] font-light text-[#1A1A1A] mt-0.5">
               Live Singapore Real Estate Registry: {district} {districtName ? `(${districtName})` : ''}
             </h3>
-            <p className="font-serif text-xs sm:text-sm text-[#1A1A1A]/70 max-w-xl">
+            <p className="font-display text-xs sm:text-sm text-[#1A1A1A]/70 max-w-xl">
               Authentic transaction records retrieved from Urban Redevelopment Authority (URA). Dual-header verified via daily token exchange.
             </p>
           </div>
@@ -123,7 +123,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
             id="ura-refresh-btn"
             onClick={loadData}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-serif text-[#1A1A1A]/80 hover:text-[#1A1A1A] bg-[#FAF8F5] border border-[#1A1A1A]/15 hover:border-[#1A1A1A]/30 rounded-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-display text-[#1A1A1A]/80 hover:text-[#1A1A1A] bg-[#FAF8F5] border border-[#1A1A1A]/15 hover:border-[#1A1A1A]/30 rounded-xs transition-colors cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh District</span>
@@ -134,7 +134,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
             id="ura-sync-all-btn"
             onClick={handleSyncAll}
             disabled={syncingAll}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-serif text-[#FAF8F5] bg-[#1A1A1A] hover:bg-[#8C7355] rounded-xs transition-colors cursor-pointer shadow-xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-display text-[#FAF8F5] bg-[#1A1A1A] hover:bg-[#8C7355] rounded-xs transition-colors cursor-pointer shadow-xs"
           >
             <Layers className={`w-3.5 h-3.5 text-[#C5A880] ${syncingAll ? 'animate-spin' : ''}`} />
             <span>{syncingAll ? 'Merging 4 Batches...' : 'Merge All 4 Batches'}</span>
@@ -158,12 +158,12 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
               URA Median PSF
             </span>
             <div className="mt-1 flex items-baseline gap-1">
-              <span className="font-serif text-2xl sm:text-3xl font-light text-[#1A1A1A]">
+              <span className="font-display text-2xl sm:text-3xl font-light text-[#1A1A1A]">
                 ${stats.medianPsf.toLocaleString()}
               </span>
-              <span className="font-serif text-xs text-[#1A1A1A]/70">/sqft</span>
+              <span className="font-display text-xs text-[#1A1A1A]/70">/sqft</span>
             </div>
-            <span className="block text-[10px] text-[#8C7355] mt-1 font-serif">
+            <span className="block text-[10px] text-[#8C7355] mt-1 font-display">
               District empirical median
             </span>
           </div>
@@ -173,11 +173,11 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
               PSF Spread Range
             </span>
             <div className="mt-1 flex items-baseline gap-1">
-              <span className="font-serif text-lg sm:text-xl font-light text-[#1A1A1A]">
+              <span className="font-display text-lg sm:text-xl font-light text-[#1A1A1A]">
                 ${stats.minPsf.toLocaleString()} – ${stats.maxPsf.toLocaleString()}
               </span>
             </div>
-            <span className="block text-[10px] text-[#1A1A1A]/70 mt-1 font-serif">
+            <span className="block text-[10px] text-[#1A1A1A]/70 mt-1 font-display">
               25th: ${stats.p25Psf.toLocaleString()} | 75th: ${stats.p75Psf.toLocaleString()}
             </span>
           </div>
@@ -187,12 +187,12 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
               Verified Records
             </span>
             <div className="mt-1 flex items-baseline gap-1">
-              <span className="font-serif text-2xl sm:text-3xl font-light text-[#1A1A1A]">
+              <span className="font-display text-2xl sm:text-3xl font-light text-[#1A1A1A]">
                 {stats.totalTransactions.toLocaleString()}
               </span>
-              <span className="font-serif text-xs text-[#1A1A1A]/70">units</span>
+              <span className="font-display text-xs text-[#1A1A1A]/70">units</span>
             </div>
-            <span className="block text-[10px] text-[#1A1A1A]/70 mt-1 font-serif">
+            <span className="block text-[10px] text-[#1A1A1A]/70 mt-1 font-display">
               Across {stats.uniqueDevelopments} developments
             </span>
           </div>
@@ -212,7 +212,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
                 {stats.bySaleType.subSale} Sub
               </span>
             </div>
-            <span className="block text-[10px] text-[#1A1A1A]/70 mt-1.5 font-serif">
+            <span className="block text-[10px] text-[#1A1A1A]/70 mt-1.5 font-display">
               Batch {stats.batch} of 4 merged
             </span>
           </div>
@@ -220,7 +220,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
       ) : (
         <div className="p-8 text-center bg-[#FAF8F5] border border-[#1A1A1A]/10 rounded-xs">
           <RefreshCw className="w-6 h-6 mx-auto text-[#8C7355] animate-spin mb-2" />
-          <p className="font-serif text-sm text-[#1A1A1A]/70">Loading verified URA data for {district}...</p>
+          <p className="font-display text-sm text-[#1A1A1A]/70">Loading verified URA data for {district}...</p>
         </div>
       )}
 
@@ -244,7 +244,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedProjectFilter(null)}
-                className="text-[11px] font-serif text-[#8C7355] hover:underline cursor-pointer"
+                className="text-[11px] font-display text-[#8C7355] hover:underline cursor-pointer"
               >
                 Clear Project Filter
               </button>
@@ -264,7 +264,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
                       : 'bg-[#FAF8F5] text-[#1A1A1A] border-[#1A1A1A]/10 hover:border-[#8C7355]'
                   }`}
                 >
-                  <div className="font-serif font-medium truncate max-w-[180px]">{proj.project}</div>
+                  <div className="font-display font-medium truncate max-w-[180px]">{proj.project}</div>
                   <div className="text-[10px] opacity-80 flex items-center gap-2 mt-0.5">
                     <span>${proj.medianPsf.toLocaleString()} psf</span>
                     <span>•</span>
@@ -287,7 +287,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
           <select
             value={saleTypeFilter}
             onChange={(e) => setSaleTypeFilter(e.target.value as any)}
-            className="bg-[#FAF8F5] border border-[#1A1A1A]/15 rounded-xs px-2.5 py-1.5 text-xs font-serif text-[#1A1A1A] cursor-pointer"
+            className="bg-[#FAF8F5] border border-[#1A1A1A]/15 rounded-xs px-2.5 py-1.5 text-xs font-display text-[#1A1A1A] cursor-pointer"
           >
             <option value="all">All Sale Types</option>
             <option value="1">New Sale (Developer)</option>
@@ -298,7 +298,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
           <select
             value={propTypeFilter}
             onChange={(e) => setPropTypeFilter(e.target.value)}
-            className="bg-[#FAF8F5] border border-[#1A1A1A]/15 rounded-xs px-2.5 py-1.5 text-xs font-serif text-[#1A1A1A] cursor-pointer"
+            className="bg-[#FAF8F5] border border-[#1A1A1A]/15 rounded-xs px-2.5 py-1.5 text-xs font-display text-[#1A1A1A] cursor-pointer"
           >
             <option value="all">All Property Types</option>
             <option value="condo">Condominiums / Apartments</option>
@@ -306,7 +306,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
           </select>
         </div>
 
-        <span className="font-serif text-xs text-[#1A1A1A]/70">
+        <span className="font-display text-xs text-[#1A1A1A]/70">
           Showing {displayedTransactions.length} recent transactions
         </span>
       </div>
@@ -326,7 +326,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
               <th className="py-2.5 px-3 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#1A1A1A]/5 text-xs font-serif">
+          <tbody className="divide-y divide-[#1A1A1A]/5 text-xs font-display">
             {displayedTransactions.length > 0 ? (
               displayedTransactions.map((tx, idx) => (
                 <tr
@@ -383,7 +383,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
                             propertyType: tx.propertyType,
                           })
                         }
-                        className="inline-flex items-center gap-1 text-[11px] font-serif text-[#8C7355] hover:text-[#1A1A1A] bg-white border border-[#1A1A1A]/15 hover:border-[#8C7355] px-2 py-1 rounded-xs transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1 text-[11px] font-display text-[#8C7355] hover:text-[#1A1A1A] bg-white border border-[#1A1A1A]/15 hover:border-[#8C7355] px-2 py-1 rounded-xs transition-colors cursor-pointer"
                         title="Use unit attributes as baseline for Valuation Calculator"
                       >
                         <span>Apply</span>
@@ -397,7 +397,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-[#1A1A1A]/60 font-serif">
+                <td colSpan={8} className="py-8 text-center text-[#1A1A1A]/60 font-display">
                   No transactions match current filters.
                 </td>
               </tr>
@@ -407,7 +407,7 @@ export const URATransactionFeed: React.FC<URATransactionFeedProps> = ({
       </div>
 
       {/* Footer verification note */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-[#1A1A1A]/10 text-[11px] text-[#1A1A1A]/70 font-serif">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-[#1A1A1A]/10 text-[11px] text-[#1A1A1A]/70 font-display">
         <div className="flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-[#8C7355] shrink-0" />
           <span>Government data source: Urban Redevelopment Authority (URA) DataService API v1.</span>

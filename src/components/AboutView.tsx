@@ -57,14 +57,14 @@ Concierge: concierge@estateanalytics.com | Desk: +1 (800) 482-9020
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
               Institutional Advisory • Monograph
             </span>
-            <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[52px] leading-[1.12] font-light text-[#1A1A1A] tracking-tight">
+            <h1 className="font-display text-[38px] sm:text-[46px] md:text-[52px] leading-[1.12] font-light text-[#1A1A1A] tracking-tight">
               Precision Meets Architectural Aspiration.
             </h1>
             <div className="editorial-rule" />
-            <p className="font-serif text-[18px] leading-[1.65] text-[#1A1A1A]/85">
+            <p className="font-display text-[18px] leading-[1.65] text-[#1A1A1A]/85">
               At EstateAnalytics, we synthesize quantitative econometric modeling with deep prime-market stewardship to deliver valuations that serve as dependable capital benchmarks.
             </p>
-            <p className="font-serif text-[15px] leading-relaxed text-[#1A1A1A]/70">
+            <p className="font-display text-[15px] leading-relaxed text-[#1A1A1A]/70">
               Founded by real estate economists, computational urban architects, and institutional wealth advisors, our mandate is to eradicate information asymmetry across high-density metro corridors.
             </p>
           </div>
@@ -90,11 +90,11 @@ Concierge: concierge@estateanalytics.com | Desk: +1 (800) 482-9020
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
               Computational Architecture
             </span>
-            <h2 className="font-serif text-[32px] md:text-[40px] font-light text-[#1A1A1A] mb-3">
+            <h2 className="font-display text-[32px] md:text-[40px] font-light text-[#1A1A1A] mb-3">
               Our Valuation Methodology
             </h2>
             <div className="editorial-rule max-w-xs mx-auto my-4" />
-            <p className="font-serif text-[16px] text-[#1A1A1A]/75 leading-relaxed">
+            <p className="font-display text-[16px] text-[#1A1A1A]/75 leading-relaxed">
               A multi-layered analytical framework engineered to isolate empirical drivers of prime residential value.
             </p>
           </div>
@@ -108,10 +108,10 @@ Concierge: concierge@estateanalytics.com | Desk: +1 (800) 482-9020
                     database
                   </span>
                 </div>
-                <h3 className="font-serif text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
+                <h3 className="font-display text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
                   Comprehensive Data Ingestion
                 </h3>
-                <p className="font-serif text-[15px] leading-[1.65] text-[#1A1A1A]/75">
+                <p className="font-display text-[15px] leading-[1.65] text-[#1A1A1A]/75">
                   We ingest decades of authenticated transaction records, macro monetary flows, statutory master plans, and hyper-local infrastructure milestones.
                 </p>
               </div>
@@ -129,10 +129,10 @@ Concierge: concierge@estateanalytics.com | Desk: +1 (800) 482-9020
                     architecture
                   </span>
                 </div>
-                <h3 className="font-serif text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
+                <h3 className="font-display text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
                   Spatial & Attribute Calibration
                 </h3>
-                <p className="font-serif text-[15px] leading-[1.65] text-[#1A1A1A]/75">
+                <p className="font-display text-[15px] leading-[1.65] text-[#1A1A1A]/75">
                   Every property is evaluated on micro attributes: solar azimuths, floor-tier premiums, acoustic damping, and discrete walking radius to transit junctions.
                 </p>
               </div>
@@ -150,10 +150,10 @@ Concierge: concierge@estateanalytics.com | Desk: +1 (800) 482-9020
                     psychiatry
                   </span>
                 </div>
-                <h3 className="font-serif text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
+                <h3 className="font-display text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
                   Algorithmic Predictive Modeling
                 </h3>
-                <p className="font-serif text-[15px] leading-[1.65] text-[#1A1A1A]/75">
+                <p className="font-display text-[15px] leading-[1.65] text-[#1A1A1A]/75">
                   Our regression engines model future cash flows, yield compressions, and capital appreciation trajectories under evolving macroeconomic interest rate regimes.
                 </p>
               </div>
@@ -171,10 +171,10 @@ Concierge: concierge@estateanalytics.com | Desk: +1 (800) 482-9020
                     gavel
                   </span>
                 </div>
-                <h3 className="font-serif text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
+                <h3 className="font-display text-[22px] md:text-[24px] font-normal text-[#1A1A1A] mb-3">
                   Chartered Surveyor Audit
                 </h3>
-                <p className="font-serif text-[15px] leading-[1.65] text-[#1A1A1A]/75">
+                <p className="font-display text-[15px] leading-[1.65] text-[#1A1A1A]/75">
                   Computational outputs are continuously audited and peer-reviewed by certified chartered valuation surveyors adhering to institutional Red Book standards.
                 </p>
               </div>
@@ -191,10 +191,10 @@ Concierge: concierge@estateanalytics.com | Desk: +1 (800) 482-9020
           <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
             Private Client Engagement
           </span>
-          <h3 className="font-serif text-[28px] sm:text-[36px] font-light text-[#1A1A1A] mb-3">
+          <h3 className="font-display text-[28px] sm:text-[36px] font-light text-[#1A1A1A] mb-3">
             Require an Institutional Appraisal?
           </h3>
-          <p className="font-serif text-[16px] text-[#1A1A1A]/75 max-w-xl mx-auto mb-8 leading-relaxed">
+          <p className="font-display text-[16px] text-[#1A1A1A]/75 max-w-xl mx-auto mb-8 leading-relaxed">
             For prime residences, family office estates, and cross-border portfolios, engage our senior appraisal desk for a confidential advisory dossier.
           </p>
 

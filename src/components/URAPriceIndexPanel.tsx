@@ -85,7 +85,7 @@ export const URAPriceIndexPanel: React.FC<URAPriceIndexPanelProps> = ({ data, lo
             </span>
           )}
         </div>
-        <div className={`font-serif text-[30px] font-light mt-1 ${active ? 'text-[#F5F2ED]' : 'text-[#1A1A1A]'}`}>
+        <div className={`font-display text-[30px] font-light mt-1 ${active ? 'text-[#F5F2ED]' : 'text-[#1A1A1A]'}`}>
           {seg.latest !== null ? seg.latest.toFixed(1) : '—'}
         </div>
         <div className={`flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1 ${active ? 'opacity-90' : ''}`}>
@@ -93,7 +93,7 @@ export const URAPriceIndexPanel: React.FC<URAPriceIndexPanelProps> = ({ data, lo
           <Delta value={seg.qoq} label="QoQ" />
         </div>
         {seg.group === 'locality' && (
-          <span className={`block font-serif text-[11px] mt-1 ${active ? 'text-[#F5F2ED]/60' : 'text-[#1A1A1A]/55'}`}>
+          <span className={`block font-display text-[11px] mt-1 ${active ? 'text-[#F5F2ED]/60' : 'text-[#1A1A1A]/55'}`}>
             {seg.fullLabel}
           </span>
         )}
@@ -109,7 +109,7 @@ export const URAPriceIndexPanel: React.FC<URAPriceIndexPanelProps> = ({ data, lo
           <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C7355] block">
             Official URA Property Price Index
           </span>
-          <h4 className="font-serif text-[18px] text-[#1A1A1A] font-normal">
+          <h4 className="font-display text-[18px] text-[#1A1A1A] font-normal">
             By Property Type & Market Segment
           </h4>
         </div>
@@ -126,11 +126,11 @@ export const URAPriceIndexPanel: React.FC<URAPriceIndexPanelProps> = ({ data, lo
       </div>
 
       {loading ? (
-        <div className="h-[150px] flex items-center justify-center font-serif text-sm text-[#1A1A1A]/50">
+        <div className="h-[150px] flex items-center justify-center font-display text-sm text-[#1A1A1A]/50">
           Loading official URA price index…
         </div>
       ) : !data || data.segments.length === 0 ? (
-        <div className="h-[150px] flex items-center justify-center gap-2 font-serif text-sm text-[#1A1A1A]/60">
+        <div className="h-[150px] flex items-center justify-center gap-2 font-display text-sm text-[#1A1A1A]/60">
           <AlertCircle className="w-4 h-4" />
           Price index unavailable right now.
         </div>
@@ -146,7 +146,7 @@ export const URAPriceIndexPanel: React.FC<URAPriceIndexPanelProps> = ({ data, lo
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">{byGroup('locality').map(renderTile)}</div>
 
-          <p className="mt-4 pt-3 border-t border-[#1A1A1A]/8 font-serif text-[11px] text-[#1A1A1A]/55">
+          <p className="mt-4 pt-3 border-t border-[#1A1A1A]/8 font-display text-[11px] text-[#1A1A1A]/55">
             Published quarterly by the {data.source.publisher}, distributed via {data.source.distributedVia}.{' '}
             {data.source.note} Sparklines show the last {data.quarters.length} quarters.
           </p>

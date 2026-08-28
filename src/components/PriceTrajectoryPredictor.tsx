@@ -482,12 +482,12 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 Issue No. 042
               </span>
             </div>
-            <h1 className="font-serif text-[36px] sm:text-[46px] md:text-[52px] font-light text-[#1A1A1A] leading-[1.08] tracking-tight">
+            <h1 className="font-display text-[36px] sm:text-[46px] md:text-[52px] font-light text-[#1A1A1A] leading-[1.08] tracking-tight">
               Property Price <br className="hidden sm:inline" />
               <span className="italic font-normal">Trajectory Predictor.</span>
             </h1>
             <div className="editorial-rule my-4" />
-            <p className="font-serif text-[17px] md:text-[18px] text-[#1A1A1A]/80 leading-relaxed">
+            <p className="font-display text-[17px] md:text-[18px] text-[#1A1A1A]/80 leading-relaxed">
               Empower your acquisition decision with forward-looking econometric trajectory simulations. Forecast future valuations, equity compounding, and capital exits across macroeconomic market cycles.
             </p>
           </div>
@@ -539,7 +539,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/60">
               Curated Buyer Archetypes:
             </span>
-            <span className="font-serif text-[12px] italic text-[#8C7355]">
+            <span className="font-display text-[12px] italic text-[#8C7355]">
               Select a benchmark profile to populate simulation
             </span>
           </div>
@@ -554,11 +554,11 @@ Notice: This monograph constitutes computational econometric projection modeled 
                   <span className="font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#8C7355]">
                     {preset.badge}
                   </span>
-                  <span className="font-serif text-[13px] font-medium text-[#1A1A1A]">
+                  <span className="font-display text-[13px] font-medium text-[#1A1A1A]">
                     ${(preset.price / 1000000).toFixed(2)}M
                   </span>
                 </div>
-                <div className="font-serif text-[13px] text-[#1A1A1A] group-hover:text-[#8C7355] transition-colors truncate">
+                <div className="font-display text-[13px] text-[#1A1A1A] group-hover:text-[#8C7355] transition-colors truncate">
                   {preset.label}
                 </div>
                 <div className="font-sans text-[10px] text-[#1A1A1A]/50 uppercase tracking-wider mt-0.5">
@@ -578,7 +578,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
             <div className="flex items-center justify-between border-b border-[#1A1A1A]/10 pb-3 mb-5">
               <div className="flex items-center gap-2">
                 <Sliders size={16} className="text-[#8C7355]" />
-                <h3 className="font-serif text-[20px] font-normal text-[#1A1A1A]">
+                <h3 className="font-display text-[20px] font-normal text-[#1A1A1A]">
                   Trajectory Parameters
                 </h3>
               </div>
@@ -597,12 +597,12 @@ Notice: This monograph constitutes computational econometric projection modeled 
                   >
                     Target Purchase Price ($)
                   </label>
-                  <span className="font-serif font-medium text-[#1A1A1A] text-[14px]">
+                  <span className="font-display font-medium text-[#1A1A1A] text-[14px]">
                     ${currentPrice.toLocaleString()}
                   </span>
                 </div>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-serif text-[#1A1A1A]/40">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-display text-[#1A1A1A]/40">$</span>
                   <input
                     id="param-price"
                     type="number"
@@ -611,7 +611,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     max={30000000}
                     value={currentPrice}
                     onChange={(e) => setCurrentPrice(Math.max(100000, Number(e.target.value) || 0))}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm pl-7 pr-3 py-2 text-[14px] font-serif text-[#1A1A1A] focus:outline-none focus:border-[#8C7355]"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm pl-7 pr-3 py-2 text-[14px] font-display text-[#1A1A1A] focus:outline-none focus:border-[#8C7355]"
                   />
                 </div>
               </div>
@@ -633,14 +633,14 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     max={15000}
                     value={sqft}
                     onChange={(e) => setSqft(Math.max(100, Number(e.target.value) || 0))}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-3 py-2 text-[14px] font-serif text-[#1A1A1A] focus:outline-none focus:border-[#8C7355]"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-3 py-2 text-[14px] font-display text-[#1A1A1A] focus:outline-none focus:border-[#8C7355]"
                   />
                 </div>
                 <div>
                   <label className="block font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/75 mb-1">
                     Entry Rate
                   </label>
-                  <div className="bg-[#E2DFD8]/30 border border-[#1A1A1A]/10 rounded-sm px-3 py-2 text-[14px] font-serif text-[#1A1A1A]">
+                  <div className="bg-[#E2DFD8]/30 border border-[#1A1A1A]/10 rounded-sm px-3 py-2 text-[14px] font-display text-[#1A1A1A]">
                     ${Math.round(currentPrice / (sqft || 1)).toLocaleString()} psf
                   </div>
                 </div>
@@ -659,7 +659,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     id="param-prop-type"
                     value={propertyType}
                     onChange={(e) => setPropertyType(e.target.value)}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-2.5 py-2 text-[13px] font-serif text-[#1A1A1A] focus:outline-none focus:border-[#8C7355] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-2.5 py-2 text-[13px] font-display text-[#1A1A1A] focus:outline-none focus:border-[#8C7355] cursor-pointer"
                   >
                     <option value="private">Private (Condominium / Apt)</option>
                     <option value="landed">Landed Estate (Bungalow / Semi-D)</option>
@@ -677,7 +677,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     id="param-district"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-2.5 py-2 text-[13px] font-serif text-[#1A1A1A] focus:outline-none focus:border-[#8C7355] cursor-pointer"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-2.5 py-2 text-[13px] font-display text-[#1A1A1A] focus:outline-none focus:border-[#8C7355] cursor-pointer"
                   >
                     <optgroup label="Core Central Region (CCR)">
                       <option value="D01">D01 - Marina Bay / Raffles</option>
@@ -714,7 +714,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                   >
                     Investment Horizon (Years)
                   </label>
-                  <span className="font-serif font-bold text-[#8C7355] text-[15px]">
+                  <span className="font-display font-bold text-[#8C7355] text-[15px]">
                     {holdingYears} Years ({new Date().getFullYear()} – {new Date().getFullYear() + holdingYears})
                   </span>
                 </div>
@@ -752,7 +752,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     <div className="font-sans text-[9px] font-bold uppercase tracking-[0.15em] opacity-75">
                       Momentum
                     </div>
-                    <div className="font-serif font-medium text-[13px]">Historical Trend</div>
+                    <div className="font-display font-medium text-[13px]">Historical Trend</div>
                     <div className="text-[10px] opacity-70 mt-0.5">~{DISTRICT_RATES[district]?.baseGrowth}% / yr</div>
                   </button>
 
@@ -767,7 +767,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     <div className="font-sans text-[9px] font-bold uppercase tracking-[0.15em] opacity-75">
                       Consensus
                     </div>
-                    <div className="font-serif font-medium text-[13px]">Balanced 3.9%</div>
+                    <div className="font-display font-medium text-[13px]">Balanced 3.9%</div>
                     <div className="text-[10px] opacity-70 mt-0.5">Master Plan Parity</div>
                   </button>
 
@@ -782,7 +782,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     <div className="font-sans text-[9px] font-bold uppercase tracking-[0.15em] opacity-75">
                       Defensive
                     </div>
-                    <div className="font-serif font-medium text-[13px]">Conservative 2.4%</div>
+                    <div className="font-display font-medium text-[13px]">Conservative 2.4%</div>
                     <div className="text-[10px] opacity-70 mt-0.5">High-Rate Regime</div>
                   </button>
 
@@ -797,7 +797,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     <div className="font-sans text-[9px] font-bold uppercase tracking-[0.15em] opacity-75">
                       Catalyst
                     </div>
-                    <div className="font-serif font-medium text-[13px]">Accelerated 6.4%</div>
+                    <div className="font-display font-medium text-[13px]">Accelerated 6.4%</div>
                     <div className="text-[10px] opacity-70 mt-0.5">Transit & Waterfront</div>
                   </button>
                 </div>
@@ -817,7 +817,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                   {scenario === 'custom' && (
                     <div className="mt-2 p-3 bg-[#E2DFD8]/30 rounded-sm border border-[#1A1A1A]/10">
                       <div className="flex justify-between items-center text-[12px] mb-1">
-                        <span className="font-serif">Custom Annual Appreciation:</span>
+                        <span className="font-display">Custom Annual Appreciation:</span>
                         <span className="font-bold text-[#8C7355]">{customGrowth.toFixed(1)}% / yr</span>
                       </div>
                       <input
@@ -852,7 +852,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 </div>
                 {includeRental && (
                   <div className="flex items-center justify-between text-[12px] bg-[#E2DFD8]/30 p-2 rounded-sm border border-[#1A1A1A]/10">
-                    <span className="font-serif">Gross Rental Yield (% p.a.):</span>
+                    <span className="font-display">Gross Rental Yield (% p.a.):</span>
                     <input
                       type="number"
                       step={0.1}
@@ -894,7 +894,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 <span className="font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#8C7355] block mb-1">
                   Projected Valuation ({new Date().getFullYear() + holdingYears})
                 </span>
-                <div className="font-serif text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight">
+                <div className="font-display text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight">
                   ${(predictionResult.finalProjectedValue / 1000000).toFixed(2)}M
                 </div>
                 <div className="font-sans text-[10px] text-[#1A1A1A]/60 mt-1">
@@ -907,7 +907,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 <span className="font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#8C7355] block mb-1">
                   Capital Appreciation
                 </span>
-                <div className="font-serif text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight flex items-baseline gap-1">
+                <div className="font-display text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight flex items-baseline gap-1">
                   <span className="text-[#8C7355]">+</span>${(predictionResult.totalCapitalGain / 1000).toLocaleString(undefined, { maximumFractionDigits: 0 })}k
                 </div>
                 <div className="font-sans text-[10px] font-semibold text-[#8C7355] mt-1 uppercase tracking-wider">
@@ -920,7 +920,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 <span className="font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#8C7355] block mb-1">
                   Annualized Trajectory
                 </span>
-                <div className="font-serif text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight">
+                <div className="font-display text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight">
                   {predictionResult.annualizedCAGR}%
                 </div>
                 <div className="font-sans text-[10px] text-[#1A1A1A]/60 mt-1 uppercase tracking-wider">
@@ -933,7 +933,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 <span className="font-sans text-[9px] font-bold uppercase tracking-[0.2em] text-[#8C7355] block mb-1">
                   Projected PSF
                 </span>
-                <div className="font-serif text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight">
+                <div className="font-display text-[26px] md:text-[28px] font-light text-[#1A1A1A] leading-tight">
                   ${predictionResult.finalPsf.toLocaleString()}
                 </div>
                 <div className="font-sans text-[10px] text-[#1A1A1A]/60 mt-1">
@@ -950,7 +950,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                   <span className="font-sans text-[9px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-1">
                     Temporal Valuation Curve • {holdingYears}-Year Horizon
                   </span>
-                  <h2 className="font-serif text-[24px] font-normal text-[#1A1A1A]">
+                  <h2 className="font-display text-[24px] font-normal text-[#1A1A1A]">
                     Forward Asset Trajectory & Confidence Corridor
                   </h2>
                 </div>
@@ -984,10 +984,10 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-sm bg-[#1A1A1A] text-[#F5F2ED] flex flex-col items-center justify-center">
                     <span className="font-sans text-[8px] uppercase tracking-wider text-[#8C7355]">Yr</span>
-                    <span className="font-serif text-[15px] font-bold leading-none">{activeDataPoint.year}</span>
+                    <span className="font-display text-[15px] font-bold leading-none">{activeDataPoint.year}</span>
                   </div>
                   <div>
-                    <div className="font-serif text-[18px] font-medium text-[#1A1A1A]">
+                    <div className="font-display text-[18px] font-medium text-[#1A1A1A]">
                       Calendar Year {activeDataPoint.calendarYear}
                     </div>
                     <div className="font-sans text-[10px] text-[#1A1A1A]/60 uppercase tracking-wider">
@@ -1003,7 +1003,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     <span className="font-sans text-[9px] font-bold uppercase tracking-[0.15em] text-[#8C7355] block">
                       {activeChartTab === 'valuation' ? 'Projected Valuation' : 'Accumulated Net Equity'}
                     </span>
-                    <span className="font-serif text-[20px] font-light text-[#1A1A1A]">
+                    <span className="font-display text-[20px] font-light text-[#1A1A1A]">
                       ${(activeChartTab === 'valuation' ? activeDataPoint.projectedValue : activeDataPoint.netEquity).toLocaleString()}
                     </span>
                   </div>
@@ -1012,7 +1012,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     <span className="font-sans text-[9px] font-bold uppercase tracking-[0.15em] text-[#8C7355] block">
                       Appreciation Gain
                     </span>
-                    <span className="font-serif text-[20px] font-light text-[#8C7355]">
+                    <span className="font-display text-[20px] font-light text-[#8C7355]">
                       +${activeDataPoint.capitalGain.toLocaleString()} (+{activeDataPoint.gainPct}%)
                     </span>
                   </div>
@@ -1021,7 +1021,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     <span className="font-sans text-[9px] font-bold uppercase tracking-[0.15em] text-[#8C7355] block">
                       Projected PSF
                     </span>
-                    <span className="font-serif text-[20px] font-light text-[#1A1A1A]">
+                    <span className="font-display text-[20px] font-light text-[#1A1A1A]">
                       ${activeDataPoint.projectedPsf}
                     </span>
                   </div>
@@ -1168,7 +1168,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                           x={cx}
                           y={padTop + innerH + 30}
                           textAnchor="middle"
-                          className="font-serif text-[9px] fill-[#1A1A1A]/40"
+                          className="font-display text-[9px] fill-[#1A1A1A]/40"
                         >
                           '{String(item.calendarYear).slice(-2)}
                         </text>
@@ -1206,7 +1206,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                   </div>
                 </div>
 
-                <div className="text-[#8C7355] font-serif italic text-xs">
+                <div className="text-[#8C7355] font-display italic text-xs">
                   Assumes {annualTrajectoryRate}% annualized CAGR based on {scenario.toUpperCase()} model
                 </div>
               </div>
@@ -1219,7 +1219,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                   <span className="font-sans text-[9px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-0.5">
                     Yearly Schedule
                   </span>
-                  <h3 className="font-serif text-[22px] font-normal text-[#1A1A1A]">
+                  <h3 className="font-display text-[22px] font-normal text-[#1A1A1A]">
                     Trajectory Amortization & Value Schedule
                   </h3>
                 </div>
@@ -1245,7 +1245,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                       <th className="py-2.5 px-3">Net Equity</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#1A1A1A]/5 font-serif">
+                  <tbody className="divide-y divide-[#1A1A1A]/5 font-display">
                     {predictionResult.yearlyBreakdown.map((row) => (
                       <tr
                         key={row.year}
@@ -1313,10 +1313,10 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 <span className="font-sans text-[9px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-1">
                   Advisory Monograph Validation
                 </span>
-                <h4 className="font-serif text-[22px] font-normal text-[#1A1A1A] mb-1">
+                <h4 className="font-display text-[22px] font-normal text-[#1A1A1A] mb-1">
                   Verify Trajectory with Chartered Surveyors
                 </h4>
-                <p className="font-serif text-[14px] text-[#1A1A1A]/70 max-w-lg">
+                <p className="font-display text-[14px] text-[#1A1A1A]/70 max-w-lg">
                   Trajectory algorithms model macroeconomic trends. For specific unit layout nuances, tenure decay, and acoustic strata, book an institutional RICS valuation audit.
                 </p>
               </div>

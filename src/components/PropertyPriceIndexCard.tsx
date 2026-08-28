@@ -62,7 +62,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
           <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-1">
             Official Price Indices & Location Benchmarks
           </span>
-          <h3 className="font-serif text-[22px] md:text-[24px] font-normal text-[#1A1A1A] flex items-center gap-2">
+          <h3 className="font-display text-[22px] md:text-[24px] font-normal text-[#1A1A1A] flex items-center gap-2">
             <MapPin size={18} className="text-[#8C7355]" />
             <span>{stats.districtCode} — {stats.districtName}</span>
           </h3>
@@ -90,7 +90,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
             </span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="font-serif text-[36px] font-light text-[#1A1A1A]">
+            <span className="font-display text-[36px] font-light text-[#1A1A1A]">
               {indexLoading ? '—' : national?.latest != null ? national.latest.toFixed(1) : '—'}
             </span>
             {nationalYoy !== null && (
@@ -105,7 +105,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
               </span>
             )}
           </div>
-          <p className="font-serif text-[13px] text-[#1A1A1A]/70 mt-1">
+          <p className="font-display text-[13px] text-[#1A1A1A]/70 mt-1">
             {isHdb
               ? 'Official HDB resale price index, published quarterly via data.gov.sg.'
               : 'Official URA private residential price index, published quarterly via data.gov.sg.'}
@@ -126,7 +126,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
             </span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="font-serif text-[36px] font-light text-[#1A1A1A]">
+            <span className="font-display text-[36px] font-light text-[#1A1A1A]">
               {stats.districtPriceIndex.toFixed(1)}
             </span>
             <span
@@ -138,10 +138,10 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
               {isPremium ? `+${spreadVsNational}%` : `${spreadVsNational}%`} vs Nat'l
             </span>
           </div>
-          <p className="font-serif text-[13px] text-[#1A1A1A]/70 mt-1">
+          <p className="font-display text-[13px] text-[#1A1A1A]/70 mt-1">
             Historical 5-year annualized capital appreciation rate: <strong>{stats.annualGrowthRate}% p.a.</strong>
           </p>
-          <p className="font-serif text-[11px] text-[#1A1A1A]/50 mt-1.5">
+          <p className="font-display text-[11px] text-[#1A1A1A]/50 mt-1.5">
             Modelled submarket composite — not an official URA series. URA publishes down to
             CCR / RCR / OCR only; see the official figures below.
           </p>
@@ -163,7 +163,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C7355] block">
               Empirical Location Distribution (Trailing 12 Months)
             </span>
-            <h4 className="font-serif text-[18px] text-[#1A1A1A] font-normal">
+            <h4 className="font-display text-[18px] text-[#1A1A1A] font-normal">
               Min, Median & Max Valuation for {sqft} sqft in {stats.districtCode}
             </h4>
           </div>
@@ -179,7 +179,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/60 block mb-1">
               Minimum (10th Percentile)
             </span>
-            <div className="font-serif text-[22px] font-light text-[#1A1A1A]">
+            <div className="font-display text-[22px] font-light text-[#1A1A1A]">
               ${stats.minPrice.toLocaleString()}
             </div>
             <span className="text-[12px] font-sans text-[#1A1A1A]/70">
@@ -192,7 +192,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C7355] block mb-1">
               Median (Transacted Benchmark)
             </span>
-            <div className="font-serif text-[24px] font-normal text-[#1A1A1A]">
+            <div className="font-display text-[24px] font-normal text-[#1A1A1A]">
               ${stats.medianPrice.toLocaleString()}
             </div>
             <span className="text-[12px] font-sans font-bold text-[#8C7355]">
@@ -205,7 +205,7 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/60 block mb-1">
               Maximum (90th Percentile)
             </span>
-            <div className="font-serif text-[22px] font-light text-[#1A1A1A]">
+            <div className="font-display text-[22px] font-light text-[#1A1A1A]">
               ${stats.maxPrice.toLocaleString()}
             </div>
             <span className="text-[12px] font-sans text-[#1A1A1A]/70">

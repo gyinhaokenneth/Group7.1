@@ -61,7 +61,7 @@ export const DisqusComments: React.FC<DisqusCommentsProps> = ({ currentTab }) =>
         <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
           Reader Correspondence
         </span>
-        <h3 className="font-serif text-[28px] md:text-[34px] font-light leading-tight text-[#1A1A1A] mb-8">
+        <h3 className="font-display text-[28px] md:text-[34px] font-light leading-tight text-[#1A1A1A] mb-8">
           Discussion
         </h3>
         <div id="disqus_thread" />

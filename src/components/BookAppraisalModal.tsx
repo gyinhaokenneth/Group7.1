@@ -73,11 +73,11 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-1">
               Dossier Registered
             </span>
-            <h3 className="font-serif text-[28px] font-light text-[#1A1A1A] mb-2">
+            <h3 className="font-display text-[28px] font-light text-[#1A1A1A] mb-2">
               Appraisal Confirmed
             </h3>
             <div className="editorial-rule max-w-xs mx-auto my-3" />
-            <p className="font-serif text-[15px] text-[#1A1A1A]/75 mb-6 max-w-md mx-auto">
+            <p className="font-display text-[15px] text-[#1A1A1A]/75 mb-6 max-w-md mx-auto">
               Your appointment has been registered with our senior valuation desk. A certified surveyor will conduct the assessment in accordance with institutional Red Book standards.
             </p>
 
@@ -88,21 +88,21 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
               </div>
               <div className="flex justify-between border-b border-[#1A1A1A]/10 pb-2">
                 <span className="font-sans text-[11px] font-semibold text-[#1A1A1A]/60 uppercase tracking-wider">Appointment:</span>
-                <span className="font-serif font-medium text-[#1A1A1A]">
+                <span className="font-display font-medium text-[#1A1A1A]">
                   {confirmedBooking.preferredDate} at {confirmedBooking.preferredTime}
                 </span>
               </div>
               <div className="flex justify-between border-b border-[#1A1A1A]/10 pb-2">
                 <span className="font-sans text-[11px] font-semibold text-[#1A1A1A]/60 uppercase tracking-wider">Assigned Surveyor:</span>
-                <span className="font-serif font-medium text-[#1A1A1A]">{confirmedBooking.surveyor}</span>
+                <span className="font-display font-medium text-[#1A1A1A]">{confirmedBooking.surveyor}</span>
               </div>
               <div className="flex justify-between border-b border-[#1A1A1A]/10 pb-2">
                 <span className="font-sans text-[11px] font-semibold text-[#1A1A1A]/60 uppercase tracking-wider">Mode:</span>
-                <span className="font-serif font-medium capitalize text-[#1A1A1A]">{confirmedBooking.consultationType} Valuation</span>
+                <span className="font-display font-medium capitalize text-[#1A1A1A]">{confirmedBooking.consultationType} Valuation</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-sans text-[11px] font-semibold text-[#1A1A1A]/60 uppercase tracking-wider">Property:</span>
-                <span className="font-serif font-medium text-[#1A1A1A] text-right truncate max-w-[240px]">
+                <span className="font-display font-medium text-[#1A1A1A] text-right truncate max-w-[240px]">
                   {confirmedBooking.propertyAddress || 'Address on file'}
                 </span>
               </div>
@@ -121,10 +121,10 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
               <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
                 Official Consultation Protocol
               </span>
-              <h3 className="font-serif text-[26px] sm:text-[30px] font-light text-[#1A1A1A] mt-1">
+              <h3 className="font-display text-[26px] sm:text-[30px] font-light text-[#1A1A1A] mt-1">
                 Book a Certified Appraisal
               </h3>
-              <p className="font-serif text-[14px] text-[#1A1A1A]/70 mt-1">
+              <p className="font-display text-[14px] text-[#1A1A1A]/70 mt-1">
                 Audited by certified valuation surveyors adhering to RICS Red Book and SISV statutory mandates.
               </p>
             </div>
@@ -142,7 +142,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="e.g. Julian Vance"
-                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                   />
                 </div>
 
@@ -156,7 +156,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="julian@investor.com"
-                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                   />
                 </div>
               </div>
@@ -173,7 +173,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+1 (555) 019-2834"
-                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                   />
                 </div>
 
@@ -184,7 +184,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                   <select
                     value={formData.propertyType}
                     onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
-                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                   >
                     <option value="condominium">Prime Condominium</option>
                     <option value="landed">Landed Estate / Good Class Bungalow</option>
@@ -205,7 +205,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                   value={formData.propertyAddress}
                   onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
                   placeholder="e.g. 18 Marina Boulevard, #34-02"
-                  className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                  className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                 />
               </div>
 
@@ -220,7 +220,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                     required
                     value={formData.preferredDate}
                     onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[13px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[13px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                   />
                 </div>
 
@@ -231,7 +231,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                   <select
                     value={formData.preferredTime}
                     onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[13px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[13px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                   >
                     <option value="09:00 AM">09:00 AM</option>
                     <option value="11:30 AM">11:30 AM</option>
@@ -247,7 +247,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                   <select
                     value={formData.consultationType}
                     onChange={(e) => setFormData({ ...formData, consultationType: e.target.value })}
-                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[13px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                    className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[13px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                   >
                     <option value="in-person">On-Site Physical Audit</option>
                     <option value="virtual">Virtual Dossier Review</option>
@@ -265,7 +265,7 @@ export const BookAppraisalModal: React.FC<BookAppraisalModalProps> = ({
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="e.g. Portfolio refinancing, estate succession, or prospective acquisition audit."
-                  className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-serif focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
+                  className="w-full border border-[#1A1A1A]/20 rounded-sm p-2.5 text-[14px] font-display focus:outline-none focus:border-[#8C7355] bg-[#F5F2ED]/20 text-[#1A1A1A]"
                 />
               </div>
 

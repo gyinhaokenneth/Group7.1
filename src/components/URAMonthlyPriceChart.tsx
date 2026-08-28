@@ -182,14 +182,14 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
           <span className="block font-sans text-[9px] uppercase tracking-[0.2em] text-[#1A1A1A]/70">
             Monthly Transacted Price Trend
           </span>
-          <h4 className="font-serif text-[18px] sm:text-[20px] font-light text-[#1A1A1A] mt-1">
+          <h4 className="font-display text-[18px] sm:text-[20px] font-light text-[#1A1A1A] mt-1">
             {district} {districtName ? `(${districtName})` : ''} · Last {months} Months
           </h4>
         </div>
         <button
           type="button"
           onClick={() => setShowTable((v) => !v)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-serif text-[#1A1A1A]/80 hover:text-[#1A1A1A] bg-white border border-[#1A1A1A]/15 hover:border-[#1A1A1A]/30 rounded-xs transition-colors cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-display text-[#1A1A1A]/80 hover:text-[#1A1A1A] bg-white border border-[#1A1A1A]/15 hover:border-[#1A1A1A]/30 rounded-xs transition-colors cursor-pointer shrink-0"
         >
           {showTable ? <LineChart className="w-3.5 h-3.5" /> : <Table2 className="w-3.5 h-3.5" />}
           <span>{showTable ? 'View Chart' : 'View Table'}</span>
@@ -198,13 +198,13 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
 
       {/* Legend - identity is never colour-alone; both keys are labelled. */}
       <div className="flex flex-wrap items-center gap-4 mt-3 mb-2">
-        <span className="inline-flex items-center gap-1.5 font-serif text-[11px] text-[#1A1A1A]/70">
+        <span className="inline-flex items-center gap-1.5 font-display text-[11px] text-[#1A1A1A]/70">
           <svg width="18" height="8" aria-hidden="true">
             <line x1="0" y1="4" x2="18" y2="4" stroke={MEDIAN_INK} strokeWidth="2" />
           </svg>
           Median price
         </span>
-        <span className="inline-flex items-center gap-1.5 font-serif text-[11px] text-[#1A1A1A]/70">
+        <span className="inline-flex items-center gap-1.5 font-display text-[11px] text-[#1A1A1A]/70">
           <svg width="18" height="10" aria-hidden="true">
             <rect x="0" y="1" width="18" height="8" fill={BAND_FILL} fillOpacity="0.35" />
           </svg>
@@ -213,17 +213,17 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
       </div>
 
       {loading ? (
-        <div className="h-[260px] flex items-center justify-center font-serif text-sm text-[#1A1A1A]/50">
+        <div className="h-[260px] flex items-center justify-center font-display text-sm text-[#1A1A1A]/50">
           Loading URA monthly trend…
         </div>
       ) : populated.length === 0 ? (
-        <div className="h-[260px] flex items-center justify-center gap-2 font-serif text-sm text-[#1A1A1A]/60">
+        <div className="h-[260px] flex items-center justify-center gap-2 font-display text-sm text-[#1A1A1A]/60">
           <AlertCircle className="w-4 h-4" />
           No transactions recorded in {district} for this window.
         </div>
       ) : showTable ? (
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse font-serif text-[13px]">
+          <table className="w-full text-left border-collapse font-display text-[13px]">
             <caption className="sr-only">
               Monthly minimum, median and maximum transacted price for {district}
             </caption>
@@ -243,7 +243,7 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
             <tbody>
               {points.map((p) => (
                 <tr key={p.sortKey} className="border-b border-[#1A1A1A]/8">
-                  <th scope="row" className="py-2 pr-4 font-serif font-normal whitespace-nowrap">
+                  <th scope="row" className="py-2 pr-4 font-display font-normal whitespace-nowrap">
                     {p.label}
                   </th>
                   <td className="py-2 pr-4 text-[#1A1A1A]/70">{p.transactionCount || '—'}</td>
@@ -286,7 +286,7 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
                   textAnchor="end"
                   fontSize="11"
                   fill={AXIS_INK}
-                  fontFamily="ui-serif, Georgia, serif"
+                  fontFamily="Inter, sans-serif"
                 >
                   {formatAxis(t)}
                 </text>
@@ -351,7 +351,7 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
                   textAnchor="middle"
                   fontSize="11"
                   fill={AXIS_INK}
-                  fontFamily="ui-serif, Georgia, serif"
+                  fontFamily="Inter, sans-serif"
                 >
                   {p.shortLabel}
                   <tspan fontSize="9" opacity="0.75">
@@ -394,7 +394,7 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
                       textAnchor="end"
                       fontSize="11"
                       fill={AXIS_INK}
-                      fontFamily="ui-serif, Georgia, serif"
+                      fontFamily="Inter, sans-serif"
                     >
                       {formatAxis(t)}
                     </text>
@@ -448,7 +448,7 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
                     textAnchor="middle"
                     fontSize="11"
                     fill={AXIS_INK}
-                    fontFamily="ui-serif, Georgia, serif"
+                    fontFamily="Inter, sans-serif"
                   >
                     {p.shortLabel}
                   </text>
@@ -472,10 +472,10 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
                 {active.label}
               </div>
               {active.medianPrice === null ? (
-                <div className="font-serif text-xs mt-1 text-[#F5F2ED]/70">No transactions</div>
+                <div className="font-display text-xs mt-1 text-[#F5F2ED]/70">No transactions</div>
               ) : (
                 <>
-                  <dl className="mt-1.5 space-y-0.5 font-serif text-[12px]">
+                  <dl className="mt-1.5 space-y-0.5 font-display text-[12px]">
                     {(
                       [
                         ['Max', active.maxPrice],
@@ -489,7 +489,7 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
                       </div>
                     ))}
                   </dl>
-                  <div className="mt-1.5 pt-1.5 border-t border-[#F5F2ED]/15 font-serif text-[11px] text-[#F5F2ED]/65">
+                  <div className="mt-1.5 pt-1.5 border-t border-[#F5F2ED]/15 font-display text-[11px] text-[#F5F2ED]/65">
                     {active.transactionCount.toLocaleString()} transactions
                   </div>
                 </>
@@ -499,7 +499,7 @@ export const URAMonthlyPriceChart: React.FC<URAMonthlyPriceChartProps> = ({
         </div>
       )}
 
-      <p className="mt-3 font-serif text-[11px] text-[#1A1A1A]/55">
+      <p className="mt-3 font-display text-[11px] text-[#1A1A1A]/55">
         Aggregated from official URA contract records. Window anchors on the latest published
         contract month, not today — URA publishes with a reporting lag.
       </p>

@@ -172,7 +172,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block">
               Gemini AI Econometric Insight
             </span>
-            <h3 className="font-serif text-[22px] md:text-[24px] font-normal text-[#1A1A1A]">
+            <h3 className="font-display text-[22px] md:text-[24px] font-normal text-[#1A1A1A]">
               Personalized {role.toUpperCase()} Intelligence Panel
             </h3>
           </div>
@@ -202,7 +202,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
       </div>
 
       {errorMsg && (
-        <div className="mb-6 p-3 bg-red-50 border-l-2 border-red-500 text-red-800 text-sm font-serif">
+        <div className="mb-6 p-3 bg-red-50 border-l-2 border-red-500 text-red-800 text-sm font-display">
           {errorMsg}
         </div>
       )}
@@ -211,7 +211,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
       {isLoading ? (
         <div className="py-12 flex flex-col items-center justify-center text-center gap-3">
           <div className="w-8 h-8 border-2 border-[#8C7355] border-t-transparent rounded-full animate-spin" />
-          <p className="font-serif text-[16px] text-[#1A1A1A]/80">
+          <p className="font-display text-[16px] text-[#1A1A1A]/80">
             Synthesizing URA transactional regression models & Gemini economic reasoning...
           </p>
           <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/50">
@@ -236,7 +236,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
             <h4 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-[#8C7355] mb-2">
               Executive Summary ({role.toUpperCase()} Perspective)
             </h4>
-            <p className="font-serif text-[16px] leading-[1.65] text-[#1A1A1A]">
+            <p className="font-display text-[16px] leading-[1.65] text-[#1A1A1A]">
               {insight.executiveSummary}
             </p>
           </div>
@@ -246,7 +246,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
             <h4 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-[#1A1A1A]/70 mb-2">
               Precinct & Master Plan Outlook
             </h4>
-            <p className="font-serif text-[15px] leading-[1.6] text-[#1A1A1A]/80">
+            <p className="font-display text-[15px] leading-[1.6] text-[#1A1A1A]/80">
               {insight.macroOutlook}
             </p>
           </div>
@@ -259,7 +259,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
                 <CheckCircle2 size={15} />
                 <span>Value Catalysts</span>
               </div>
-              <ul className="space-y-2 font-serif text-[13.5px] text-[#1A1A1A]/85">
+              <ul className="space-y-2 font-display text-[13.5px] text-[#1A1A1A]/85">
                 {insight.keyDrivers.map((driver, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <span className="text-[#8C7355] text-xs mt-0.5">•</span>
@@ -275,7 +275,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
                 <ShieldAlert size={15} />
                 <span>Risk Exposures</span>
               </div>
-              <ul className="space-y-2 font-serif text-[13.5px] text-[#1A1A1A]/85">
+              <ul className="space-y-2 font-display text-[13.5px] text-[#1A1A1A]/85">
                 {insight.riskFactors.map((risk, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <span className="text-amber-700 text-xs mt-0.5">•</span>
@@ -291,7 +291,7 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
                 <TrendingUp size={15} />
                 <span>Tactical Execution</span>
               </div>
-              <ul className="space-y-2 font-serif text-[13.5px] text-[#1A1A1A]/85">
+              <ul className="space-y-2 font-display text-[13.5px] text-[#1A1A1A]/85">
                 {insight.strategicAdvice.map((advice, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <span className="text-[#1A1A1A] text-xs mt-0.5 font-bold">✓</span>
@@ -305,10 +305,10 @@ Generated via EstateAnalytics Serverless AI Insight Panel`;
       ) : (
         <div className="py-8 text-center bg-[#FAF8F5] rounded-xs border border-dashed border-[#1A1A1A]/15 p-6">
           <Sparkles size={24} className="mx-auto text-[#8C7355] mb-2 opacity-80" />
-          <h4 className="font-serif text-[18px] text-[#1A1A1A] font-normal mb-1">
+          <h4 className="font-display text-[18px] text-[#1A1A1A] font-normal mb-1">
             Tap 'Generate AI Insight' for Real-Time Analysis
           </h4>
-          <p className="font-serif text-[14px] text-[#1A1A1A]/70 max-w-md mx-auto mb-4">
+          <p className="font-display text-[14px] text-[#1A1A1A]/70 max-w-md mx-auto mb-4">
             Our serverless Gemini backend evaluates your specific property parameters ({district}, {propertyType.toUpperCase()}, {size} sqft, {facing}) against historical URA transactional regression curves.
           </p>
           <button
