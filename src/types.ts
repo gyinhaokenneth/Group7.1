@@ -1,5 +1,7 @@
 export type TabType = 'valuation' | 'trajectory' | 'rent' | 'trends' | 'about';
 
+export type UserPersonaRole = 'buyer' | 'seller' | 'rentee' | 'investor';
+
 export type PropertyType = 'apartment' | 'condominium' | 'landed';
 
 export type TrajectoryScenario = 'conservative' | 'baseline' | 'accelerated' | 'historical' | 'custom';
@@ -60,7 +62,7 @@ export interface SavedTrajectoryPrediction {
 export interface Property {
   id: string;
   title: string;
-  price: number; // monthly rent in USD
+  price: number; // monthly rent in SGD/USD
   priceFormatted: string;
   location: string;
   district: string;
@@ -80,27 +82,68 @@ export interface Property {
 }
 
 export interface ValuationFormValues {
-  propertyType: string;
+  role: UserPersonaRole;
+  district: string;
+  propertyType: 'private' | 'landed' | 'hdb' | string;
+  subType?: string;
   size: number | '';
+  level: string;
+  tenure: string;
+  leaseRemainingYears: number;
   facing: string;
-  transportProximity: string;
-  district?: string;
-  condition?: string;
+  amenityProximity: string;
+  condition: string;
+  transportProximity?: string;
   bedrooms?: number;
+  // Seller-specific fields
+  outstandingLoan?: number;
+  cpfRefund?: number;
+  sellerHoldingYears?: number;
 }
 
 export interface ValuationResult {
+  role: UserPersonaRole;
   estimatedMin: number;
   estimatedMax: number;
   estimatedMedian: number;
   psfMin: number;
   psfMax: number;
+  psfMedian: number;
   confidenceScore: number;
   annualYieldRate: number;
   monthlyRentalEstimate: number;
   facingFactorPct: number;
   transitFactorPct: number;
+  levelFactorPct: number;
+  conditionFactorPct: number;
+  leaseFactorPct: number;
   districtMultiplier: number;
+  districtPriceIndex: number;
+  nationalPriceIndex: number;
+  indexSpreadPct: number;
+  // Seller Net Proceeds
+  sellerNetProceeds?: {
+    sellingPrice: number;
+    outstandingLoan: number;
+    cpfRefund: number;
+    agentCommission: number;
+    legalFee: number;
+    ssdRate: number;
+    ssdAmount: number;
+    netCashInHand: number;
+  };
+  timestamp: string;
+}
+
+export interface AIInsightResult {
+  source: 'gemini_ai' | 'heuristic_insight';
+  role: string;
+  title: string;
+  executiveSummary: string;
+  macroOutlook: string;
+  keyDrivers: string[];
+  riskFactors: string[];
+  strategicAdvice: string[];
   timestamp: string;
 }
 

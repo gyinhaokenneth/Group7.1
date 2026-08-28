@@ -1,6 +1,35 @@
-import React, { useState } from 'react';
-import { TabType, ValuationFormValues, ValuationResult, TrajectoryPredictionParams } from '../types';
-import { ArrowRight, CheckCircle2, ChevronRight, Share2, Bookmark, Sparkles, TrendingUp, LineChart } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import {
+  TabType,
+  ValuationFormValues,
+  ValuationResult,
+  TrajectoryPredictionParams,
+  UserPersonaRole,
+} from '../types';
+import {
+  SINGAPORE_DISTRICTS,
+  getBalasTableFactor,
+  getDistrictPriceStats,
+} from '../data/singaporeDistricts';
+import { PropertyPriceIndexCard } from './PropertyPriceIndexCard';
+import { GeminiInsightPanel } from './GeminiInsightPanel';
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  Share2,
+  Bookmark,
+  Sparkles,
+  TrendingUp,
+  LineChart,
+  DollarSign,
+  Layers,
+  MapPin,
+  Building,
+  Info,
+  ShieldAlert,
+  Download,
+} from 'lucide-react';
 
 interface ValuationViewProps {
   onNavigateTab: (tab: TabType) => void;
@@ -15,11 +44,24 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
   onSaveValuation,
   onPredictTrajectory,
 }) => {
+  // Form Values State according to technical specification
   const [formValues, setFormValues] = useState<ValuationFormValues>({
-    propertyType: '',
+    role: 'buyer',
+    district: 'D09',
+    propertyType: 'private',
+    subType: 'Condominium',
     size: 1200,
-    facing: '',
-    transportProximity: '',
+    level: 'mid',
+    tenure: 'freehold',
+    leaseRemainingYears: 99,
+    facing: 'north_south',
+    amenityProximity: 'mrt_300m',
+    condition: 'well_maintained',
+    transportProximity: '5',
+    // Seller inputs
+    outstandingLoan: 450000,
+    cpfRefund: 185000,
+    sellerHoldingYears: 4,
   });
 
   const [isCalculating, setIsCalculating] = useState(false);
@@ -28,96 +70,207 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
+  // Active district information
+  const selectedDistrictInfo = useMemo(() => {
+    return SINGAPORE_DISTRICTS[formValues.district] || SINGAPORE_DISTRICTS.D09;
+  }, [formValues.district]);
+
+  // Real-time location stats (Min, Median, Max)
+  const locationStats = useMemo(() => {
+    return getDistrictPriceStats(
+      formValues.district,
+      (formValues.propertyType === 'landed'
+        ? 'landed'
+        : formValues.propertyType === 'hdb'
+        ? 'hdb'
+        : 'private'),
+      Number(formValues.size) || 1200
+    );
+  }, [formValues.district, formValues.propertyType, formValues.size]);
+
+  // Bala's Table Leasehold Factor
+  const leaseholdFactor = useMemo(() => {
+    if (formValues.tenure === 'freehold' || formValues.tenure === '999yr') {
+      return 1.0;
+    }
+    return getBalasTableFactor(formValues.leaseRemainingYears || 99);
+  }, [formValues.tenure, formValues.leaseRemainingYears]);
+
+  const handleRoleChange = (role: UserPersonaRole) => {
+    setFormValues((prev) => ({ ...prev, role }));
+  };
+
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formValues.propertyType) {
-      setFormError('Please select a property type.');
-      return;
-    }
     if (!formValues.size || Number(formValues.size) <= 0) {
-      setFormError('Please provide a valid property size.');
-      return;
-    }
-    if (!formValues.facing) {
-      setFormError('Please select the property facing direction.');
-      return;
-    }
-    if (!formValues.transportProximity) {
-      setFormError('Please select proximity to public transport.');
+      setFormError('Please provide a valid property size in square feet.');
       return;
     }
 
     setFormError(null);
     setIsCalculating(true);
 
-    // Realistic valuation formula simulation based on Singapore/global prime market metrics
     setTimeout(() => {
       const sizeNum = Number(formValues.size);
-      let basePsf = 1450;
-      if (formValues.propertyType === 'private') basePsf = 1850;
-      if (formValues.propertyType === 'landed') basePsf = 2400;
-      if (formValues.propertyType === 'hdb') basePsf = 680;
+      const district = selectedDistrictInfo;
 
-      // Facing adjustments
+      // Base PSF selection
+      let basePsf = district.basePsfPrivate;
+      if (formValues.propertyType === 'landed') basePsf = district.basePsfLanded;
+      if (formValues.propertyType === 'hdb') basePsf = district.basePsfHdb || 680;
+
+      // Facing Adjustments
       let facingMultiplier = 1.0;
       let facingFactorPct = 0;
-      if (formValues.facing === 'north' || formValues.facing === 'south') {
-        facingMultiplier = 1.04; // avoid west sun
-        facingFactorPct = 4.0;
+      if (formValues.facing === 'north_south' || formValues.facing === 'sea_view' || formValues.facing === 'greenery') {
+        facingMultiplier = formValues.facing === 'sea_view' ? 1.08 : 1.04;
+        facingFactorPct = formValues.facing === 'sea_view' ? 8.0 : 4.0;
       } else if (formValues.facing === 'east') {
-        facingMultiplier = 1.02; // morning sun
+        facingMultiplier = 1.02;
         facingFactorPct = 2.0;
       } else if (formValues.facing === 'west') {
-        facingMultiplier = 0.98; // afternoon sun
-        facingFactorPct = -2.0;
+        facingMultiplier = 0.97;
+        facingFactorPct = -3.0;
       }
 
-      // Transit adjustments
+      // Floor Level Adjustments
+      let levelMultiplier = 1.0;
+      let levelFactorPct = 0;
+      if (formValues.level === 'penthouse') {
+        levelMultiplier = 1.12;
+        levelFactorPct = 12.0;
+      } else if (formValues.level === 'high') {
+        levelMultiplier = 1.05;
+        levelFactorPct = 5.0;
+      } else if (formValues.level === 'mid') {
+        levelMultiplier = 1.0;
+        levelFactorPct = 0;
+      } else {
+        levelMultiplier = 0.96;
+        levelFactorPct = -4.0;
+      }
+
+      // Amenities Adjustments
       let transitMultiplier = 1.0;
       let transitFactorPct = 0;
-      if (formValues.transportProximity === '5') {
-        transitMultiplier = 1.07;
-        transitFactorPct = 7.0;
-      } else if (formValues.transportProximity === '10') {
-        transitMultiplier = 1.03;
-        transitFactorPct = 3.0;
-      } else {
-        transitMultiplier = 0.98;
-        transitFactorPct = -2.0;
+      if (formValues.amenityProximity === 'mrt_300m') {
+        transitMultiplier = 1.06;
+        transitFactorPct = 6.0;
+      } else if (formValues.amenityProximity === 'school_1km') {
+        transitMultiplier = 1.04;
+        transitFactorPct = 4.0;
+      } else if (formValues.amenityProximity === 'mall_hub') {
+        transitMultiplier = 1.05;
+        transitFactorPct = 5.0;
       }
 
-      const calculatedPsfMedian = Math.round(basePsf * facingMultiplier * transitMultiplier);
-      const psfMin = Math.round(calculatedPsfMedian * 0.95);
-      const psfMax = Math.round(calculatedPsfMedian * 1.05);
+      // Condition Adjustments
+      let conditionMultiplier = 1.0;
+      let conditionFactorPct = 0;
+      if (formValues.condition === 'designer') {
+        conditionMultiplier = 1.08;
+        conditionFactorPct = 8.0;
+      } else if (formValues.condition === 'well_maintained') {
+        conditionMultiplier = 1.02;
+        conditionFactorPct = 2.0;
+      } else if (formValues.condition === 'needs_overhaul') {
+        conditionMultiplier = 0.93;
+        conditionFactorPct = -7.0;
+      }
 
-      const estimatedMedian = Math.round(calculatedPsfMedian * sizeNum);
+      // Leasehold decay multiplier via Bala's Table
+      const leaseMultiplier = leaseholdFactor;
+      const leaseFactorPct = Number(((leaseMultiplier - 1.0) * 100).toFixed(1));
+
+      // Calculate composite median PSF
+      const compositePsf = Math.round(
+        basePsf *
+          facingMultiplier *
+          levelMultiplier *
+          transitMultiplier *
+          conditionMultiplier *
+          leaseMultiplier
+      );
+
+      const psfMin = Math.round(compositePsf * district.minPsfMultiplier);
+      const psfMax = Math.round(compositePsf * district.maxPsfMultiplier);
+      const estimatedMedian = Math.round(compositePsf * sizeNum);
       const estimatedMin = Math.round(psfMin * sizeNum);
       const estimatedMax = Math.round(psfMax * sizeNum);
 
-      const annualYieldRate = formValues.propertyType === 'landed' ? 2.8 : 3.8;
+      const annualYieldRate =
+        formValues.propertyType === 'landed' ? 2.7 : formValues.propertyType === 'hdb' ? 4.8 : 3.6;
       const monthlyRentalEstimate = Math.round((estimatedMedian * (annualYieldRate / 100)) / 12);
 
+      // Seller Proceeds Calculation if role === 'seller'
+      let sellerNetProceeds = undefined;
+      if (formValues.role === 'seller') {
+        const sellingPrice = estimatedMedian;
+        const outstandingLoan = formValues.outstandingLoan || 0;
+        const cpfRefund = formValues.cpfRefund || 0;
+        const agentCommission = Math.round(sellingPrice * 0.02); // standard 2%
+        const legalFee = 3000;
+
+        // Seller's Stamp Duty (SSD)
+        const holdingYears = formValues.sellerHoldingYears || 4;
+        let ssdRate = 0;
+        if (holdingYears <= 1) ssdRate = 0.12;
+        else if (holdingYears <= 2) ssdRate = 0.08;
+        else if (holdingYears <= 3) ssdRate = 0.04;
+        else ssdRate = 0.0;
+
+        const ssdAmount = Math.round(sellingPrice * ssdRate);
+        const netCashInHand = Math.max(
+          0,
+          sellingPrice - outstandingLoan - cpfRefund - agentCommission - legalFee - ssdAmount
+        );
+
+        sellerNetProceeds = {
+          sellingPrice,
+          outstandingLoan,
+          cpfRefund,
+          agentCommission,
+          legalFee,
+          ssdRate: ssdRate * 100,
+          ssdAmount,
+          netCashInHand,
+        };
+      }
+
       const result: ValuationResult = {
+        role: formValues.role,
         estimatedMin,
         estimatedMax,
         estimatedMedian,
         psfMin,
         psfMax,
-        confidenceScore: 97.4,
+        psfMedian: compositePsf,
+        confidenceScore: 97.8,
         annualYieldRate,
         monthlyRentalEstimate,
         facingFactorPct,
         transitFactorPct,
-        districtMultiplier: 1.15,
-        timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        levelFactorPct,
+        conditionFactorPct,
+        leaseFactorPct,
+        districtMultiplier: Number((compositePsf / basePsf).toFixed(2)),
+        districtPriceIndex: district.districtPriceIndex,
+        nationalPriceIndex: district.nationalIndex,
+        indexSpreadPct: locationStats.spreadVsNational,
+        sellerNetProceeds,
+        timestamp: new Date().toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        }),
       };
 
       setCalculationResult(result);
       setIsCalculating(false);
       setShowResultModal(true);
       setSavedSuccess(false);
-    }, 600);
+    }, 550);
   };
 
   const handleSaveResult = () => {
@@ -131,189 +284,379 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-[#F5F2ED] pt-12 md:pt-20 pb-20 md:pb-28 border-b border-[#1A1A1A]/10">
-        {/* Background Image with soft tone */}
+      <section className="relative w-full overflow-hidden bg-[#F5F2ED] pt-10 md:pt-16 pb-16 md:pb-24 border-b border-[#1A1A1A]/10">
         <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center z-0 opacity-15 pointer-events-none mix-blend-multiply"
+          className="absolute inset-0 w-full h-full bg-cover bg-center z-0 opacity-10 pointer-events-none mix-blend-multiply"
           style={{
             backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuBXdx5b7y4IyDp_uwJIUo9fX2KPJEXWpO-jqmlxEMdmkbvS_Anmw1vBc-Ch5kuJNAbDLcEVz0G-ESu7FqqOVYxv3OfanouPJwaTDtwllrc1_SbGddyLzueEIxGGsx4dySHwZiYGzuyeLon7RWSrWL1F3GAnzyPWFwXwMuE0GFqfRPT4hXt92zB-TEnOKCQOT9_YIS1b4dQ2ejvKcVLiUH4JZ0iVxfTImfPzwZNtUEytnbG-OB-e91Owag')`,
           }}
         />
-
-        {/* Ambient Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#F5F2ED] via-[#F5F2ED]/90 to-transparent z-0 pointer-events-none" />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-5 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Hero Text */}
+        <div className="relative z-10 max-w-[1240px] mx-auto px-5 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Left Column: Heading & Role Context */}
           <div className="lg:col-span-5 flex flex-col gap-5">
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
-              Intelligence Monograph • Issue No. 042
+              Real Estate Intelligence • All Singapore Districts
             </span>
-            <h1 className="font-serif text-[36px] sm:text-[44px] md:text-[52px] leading-[1.05] tracking-tight font-light text-[#1A1A1A]">
-              Precise valuation <br className="hidden sm:inline" />
-              <span className="italic font-normal">for the modern investor.</span>
+            <h1 className="font-serif text-[34px] sm:text-[42px] md:text-[48px] leading-[1.08] tracking-tight font-light text-[#1A1A1A]">
+              Residential Property <br className="hidden sm:inline" />
+              <span className="italic font-normal">Analytics & Appraisal</span>
             </h1>
             <div className="editorial-rule my-1" />
-            <p className="text-[17px] md:text-[18px] leading-[1.65] text-[#1A1A1A]/80 max-w-md font-serif">
-              Discover the true market value of your property with our advanced, data-driven appraisal algorithms and expert market insights.
+            <p className="text-[16px] md:text-[17px] leading-[1.65] text-[#1A1A1A]/80 font-serif">
+              Tailored for <strong>Buyers, Sellers, Renters, and Investors</strong>. Query official price indices, compute leasehold decay, evaluate net seller proceeds, and generate Gemini AI macroeconomic advisories.
             </p>
 
-            <div className="pt-2 hidden sm:flex items-center gap-6 font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/60">
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8C7355]" />
-                <span>Live Transaction Ledger</span>
+            {/* Quick Live Indicators */}
+            <div className="p-4 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10 shadow-2xs space-y-2 text-[12px] font-sans">
+              <div className="flex justify-between items-center text-[#1A1A1A]">
+                <span className="text-[#8C7355] font-bold uppercase tracking-[0.15em]">National Private PPI</span>
+                <span className="font-bold">196.4 pts (+3.2% YoY)</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1A1A1A]" />
-                <span>97.4% Spatial Accuracy</span>
+              <div className="flex justify-between items-center text-[#1A1A1A]">
+                <span className="text-[#8C7355] font-bold uppercase tracking-[0.15em]">National HDB Resale RPI</span>
+                <span className="font-bold">189.2 pts (+4.8% YoY)</span>
+              </div>
+              <div className="flex justify-between items-center text-[#1A1A1A]">
+                <span className="text-[#8C7355] font-bold uppercase tracking-[0.15em]">Selected District ({selectedDistrictInfo.code})</span>
+                <span className="font-bold">{selectedDistrictInfo.districtPriceIndex} pts</span>
               </div>
             </div>
           </div>
 
-          {/* Valuation Search Tool Card */}
+          {/* Right Column: Full Feature Form */}
           <div className="lg:col-span-7">
-            <div className="bg-[#FFFFFF] rounded-sm p-6 sm:p-8 md:p-10 shadow-[0_15px_35px_-10px_rgba(26,26,26,0.06)] border border-[#1A1A1A]/10">
-              <div className="flex items-center justify-between border-b border-[#1A1A1A]/10 pb-4 mb-6 sm:mb-8">
-                <h2 className="font-serif text-[24px] sm:text-[28px] font-light text-[#1A1A1A] leading-[1.2]">
-                  Property Market Rate Inquiry
-                </h2>
-                <span className="hidden sm:inline-flex font-sans text-[9px] font-bold uppercase tracking-[0.25em] text-[#8C7355] bg-[#E2DFD8]/60 px-2.5 py-1 rounded-sm">
-                  Instant Algorithmic Rate
+            <div className="bg-[#FFFFFF] rounded-sm p-6 sm:p-8 shadow-[0_15px_35px_-10px_rgba(26,26,26,0.06)] border border-[#1A1A1A]/10">
+              {/* Role Selection Switcher (Mandated by Technical Spec) */}
+              <div className="mb-6">
+                <span className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-[#8C7355] block mb-2">
+                  Select User Persona
                 </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { key: 'buyer', label: 'Property Buyer' },
+                    { key: 'seller', label: 'Property Seller' },
+                    { key: 'rentee', label: 'Rentee / Tenant' },
+                    { key: 'investor', label: 'Property Investor' },
+                  ].map((r) => (
+                    <button
+                      key={r.key}
+                      type="button"
+                      onClick={() => handleRoleChange(r.key as UserPersonaRole)}
+                      className={`py-2 px-2 text-center text-[11px] font-sans font-bold uppercase tracking-[0.12em] rounded-xs border transition-all cursor-pointer ${
+                        formValues.role === r.key
+                          ? 'bg-[#1A1A1A] text-[#F5F2ED] border-[#1A1A1A] shadow-xs'
+                          : 'bg-[#FAF8F5] text-[#1A1A1A]/70 border-[#1A1A1A]/15 hover:border-[#8C7355]'
+                      }`}
+                    >
+                      {r.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {formError && (
-                <div className="mb-6 p-3 bg-[#E2DFD8]/50 border-l-2 border-[#8C7355] text-[#1A1A1A] font-serif text-[14px]">
+                <div className="mb-6 p-3 bg-red-50 border-l-2 border-red-500 text-red-800 text-sm font-serif">
                   {formError}
                 </div>
               )}
 
-              <form onSubmit={handleCalculate} className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                {/* Property Type */}
-                <div className="flex flex-col gap-2">
+              <form onSubmit={handleCalculate} className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                {/* 1. Location / District */}
+                <div className="flex flex-col gap-1.5">
                   <label
-                    htmlFor="valuation-prop-type"
-                    className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-[#1A1A1A]/80"
+                    htmlFor="form-district"
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
+                  >
+                    Location / District
+                  </label>
+                  <select
+                    id="form-district"
+                    value={formValues.district}
+                    onChange={(e) => setFormValues({ ...formValues, district: e.target.value })}
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                  >
+                    <optgroup label="Core Central Region (CCR)">
+                      <option value="D01">D01 - Marina Bay / Boat Quay / Raffles Place</option>
+                      <option value="D02">D02 - Chinatown / Tanjong Pagar</option>
+                      <option value="D04">D04 - Harbourfront / Telok Blangah / Sentosa</option>
+                      <option value="D09">D09 - Orchard / River Valley / Cairnhill</option>
+                      <option value="D10">D10 - Bukit Timah / Holland / Tanglin</option>
+                      <option value="D11">D11 - Newton / Novena / Dunearn</option>
+                    </optgroup>
+                    <optgroup label="Rest of Central Region (RCR)">
+                      <option value="D03">D03 - Queenstown / Tiong Bahru / Alexandra</option>
+                      <option value="D05">D05 - Buona Vista / West Coast / Clementi</option>
+                      <option value="D12">D12 - Balestier / Toa Payoh / Serangoon</option>
+                      <option value="D14">D14 - Geylang / Eunos / Paya Lebar</option>
+                      <option value="D15">D15 - East Coast / Marine Parade / Katong</option>
+                      <option value="D20">D20 - Bishan / Ang Mo Kio / Thomson</option>
+                      <option value="D21">D21 - Upper Bukit Timah / Clementi Park</option>
+                    </optgroup>
+                    <optgroup label="Outside Central Region (OCR)">
+                      <option value="D19">D19 - Serangoon / Hougang / Punggol / Sengkang</option>
+                      <option value="D22">D22 - Jurong / Boon Lay / Lakeside</option>
+                      <option value="D23">D23 - Bukit Batok / Bukit Panjang / Hillview</option>
+                      <option value="D27">D27 - Yishun / Sembawang / Canberra</option>
+                    </optgroup>
+                  </select>
+                </div>
+
+                {/* 2. Property Type */}
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="form-prop-type"
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
                   >
                     Property Type
                   </label>
-                  <div className="relative">
-                    <select
-                      id="valuation-prop-type"
-                      value={formValues.propertyType}
-                      onChange={(e) => setFormValues({ ...formValues, propertyType: e.target.value })}
-                      className="premium-input w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm p-3 text-[15px] font-serif text-[#1A1A1A] appearance-none cursor-pointer pr-10"
-                    >
-                      <option value="">Select type</option>
-                      <option value="private">Private Condominium</option>
-                      <option value="landed">Landed Estate</option>
-                      <option value="hdb">HDB (Public Housing)</option>
-                    </select>
-                    <span
-                      className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#1A1A1A]/50 pointer-events-none text-[20px]"
-                      data-icon="expand_more"
-                    >
-                      expand_more
-                    </span>
-                  </div>
+                  <select
+                    id="form-prop-type"
+                    value={formValues.propertyType}
+                    onChange={(e) => setFormValues({ ...formValues, propertyType: e.target.value })}
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                  >
+                    <option value="private">Private (Condominium / Apartment)</option>
+                    <option value="landed">Landed (Bungalow / Semi-D / Terrace)</option>
+                    <option value="hdb">HDB (Public Housing Resale)</option>
+                  </select>
                 </div>
 
-                {/* Size */}
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="valuation-size"
-                    className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-[#1A1A1A]/80"
-                  >
-                    Size (SQFT / SQM)
-                  </label>
+                {/* 3. Size (Sqft + Sqm conversion) */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between items-center">
+                    <label
+                      htmlFor="form-size"
+                      className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
+                    >
+                      Size (Sqft)
+                    </label>
+                    <span className="font-sans text-[10px] text-[#8C7355] font-semibold">
+                      ≈ {((Number(formValues.size) || 0) * 0.0929).toFixed(1)} sqm
+                    </span>
+                  </div>
                   <input
-                    id="valuation-size"
+                    id="form-size"
                     type="number"
                     value={formValues.size}
                     onChange={(e) =>
                       setFormValues({ ...formValues, size: e.target.value === '' ? '' : Number(e.target.value) })
                     }
                     placeholder="e.g. 1200"
-                    className="premium-input w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm p-3 text-[15px] font-serif text-[#1A1A1A] placeholder:text-[#1A1A1A]/30"
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A]"
                   />
                 </div>
 
-                {/* Facing */}
-                <div className="flex flex-col gap-2">
+                {/* 4. Floor Level */}
+                <div className="flex flex-col gap-1.5">
                   <label
-                    htmlFor="valuation-facing"
-                    className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-[#1A1A1A]/80"
+                    htmlFor="form-level"
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
+                  >
+                    Floor Level
+                  </label>
+                  <select
+                    id="form-level"
+                    value={formValues.level}
+                    onChange={(e) => setFormValues({ ...formValues, level: e.target.value })}
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                  >
+                    <option value="low">Ground / Low Floor (Level 1–5)</option>
+                    <option value="mid">Mid Floor (Level 6–15)</option>
+                    <option value="high">High Floor (Level 16–25)</option>
+                    <option value="penthouse">Penthouse / Ultra High (Level 26+)</option>
+                  </select>
+                </div>
+
+                {/* 5. Tenure */}
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="form-tenure"
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
+                  >
+                    Tenure
+                  </label>
+                  <select
+                    id="form-tenure"
+                    value={formValues.tenure}
+                    onChange={(e) => setFormValues({ ...formValues, tenure: e.target.value })}
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                  >
+                    <option value="freehold">Freehold (Estate in Perpetuity)</option>
+                    <option value="999yr">999-Year Leasehold</option>
+                    <option value="99yr">99-Year Leasehold</option>
+                  </select>
+                </div>
+
+                {/* 6. Lease Remaining & Bala's Table */}
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between items-center">
+                    <label
+                      htmlFor="form-lease-years"
+                      className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
+                    >
+                      Years of Lease Remaining
+                    </label>
+                    <span className="font-sans text-[10px] text-[#8C7355] font-semibold">
+                      Bala's Factor: {(leaseholdFactor * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                  <input
+                    id="form-lease-years"
+                    type="number"
+                    min={30}
+                    max={999}
+                    disabled={formValues.tenure === 'freehold' || formValues.tenure === '999yr'}
+                    value={formValues.tenure === 'freehold' ? 999 : formValues.leaseRemainingYears}
+                    onChange={(e) =>
+                      setFormValues({ ...formValues, leaseRemainingYears: Number(e.target.value) || 99 })
+                    }
+                    className="w-full bg-[#FFFFFF] disabled:bg-[#F5F2ED] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A]"
+                  />
+                </div>
+
+                {/* 7. Facing Orientation */}
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="form-facing"
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
                   >
                     Facing Orientation
                   </label>
-                  <div className="relative">
-                    <select
-                      id="valuation-facing"
-                      value={formValues.facing}
-                      onChange={(e) => setFormValues({ ...formValues, facing: e.target.value })}
-                      className="premium-input w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm p-3 text-[15px] font-serif text-[#1A1A1A] appearance-none cursor-pointer pr-10"
-                    >
-                      <option value="">Select facing</option>
-                      <option value="north">North (Unobstructed Natural Light)</option>
-                      <option value="south">South (Cool Cross-Breeze)</option>
-                      <option value="east">East (Gentle Morning Sun)</option>
-                      <option value="west">West (Sunset Panorama)</option>
-                    </select>
-                    <span
-                      className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#1A1A1A]/50 pointer-events-none text-[20px]"
-                      data-icon="expand_more"
-                    >
-                      expand_more
-                    </span>
-                  </div>
-                </div>
-
-                {/* Proximity to Transport */}
-                <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="valuation-transit"
-                    className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-[#1A1A1A]/80"
+                  <select
+                    id="form-facing"
+                    value={formValues.facing}
+                    onChange={(e) => setFormValues({ ...formValues, facing: e.target.value })}
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
                   >
-                    Transit Proximity
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="valuation-transit"
-                      value={formValues.transportProximity}
-                      onChange={(e) => setFormValues({ ...formValues, transportProximity: e.target.value })}
-                      className="premium-input w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm p-3 text-[15px] font-serif text-[#1A1A1A] appearance-none cursor-pointer pr-10"
-                    >
-                      <option value="">Select distance</option>
-                      <option value="5">Under 5 mins walk (Direct / Sheltered)</option>
-                      <option value="10">5-10 mins walk</option>
-                      <option value="15">10+ mins walk</option>
-                    </select>
-                    <span
-                      className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#1A1A1A]/50 pointer-events-none text-[20px]"
-                      data-icon="expand_more"
-                    >
-                      expand_more
-                    </span>
-                  </div>
+                    <option value="north_south">North-South (Optimal Breeze, No West Sun)</option>
+                    <option value="sea_view">South / Panoramic Sea View</option>
+                    <option value="greenery">Unblocked Greenery / Nature View</option>
+                    <option value="east">East (Gentle Morning Sun)</option>
+                    <option value="west">West (Afternoon Sun Exposure)</option>
+                  </select>
                 </div>
 
-                {/* CTA Button */}
-                <div className="md:col-span-2 mt-3">
+                {/* 8. Proximity to Amenities */}
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="form-amenities"
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
+                  >
+                    Proximity to Key Amenities
+                  </label>
+                  <select
+                    id="form-amenities"
+                    value={formValues.amenityProximity}
+                    onChange={(e) => setFormValues({ ...formValues, amenityProximity: e.target.value })}
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                  >
+                    <option value="mrt_300m">&lt; 300m to MRT Station (Sheltered Walk)</option>
+                    <option value="school_1km">Within 1km of Top Primary School</option>
+                    <option value="mall_hub">Adjacent to Major Retail Mall & Transit Interchange</option>
+                    <option value="park_nature">Park Connector & Nature Reserve Frontage</option>
+                  </select>
+                </div>
+
+                {/* 9. Maintenance & Condition */}
+                <div className="flex flex-col gap-1.5 md:col-span-2">
+                  <label
+                    htmlFor="form-condition"
+                    className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/80"
+                  >
+                    Maintenance & Renovation Condition
+                  </label>
+                  <select
+                    id="form-condition"
+                    value={formValues.condition}
+                    onChange={(e) => setFormValues({ ...formValues, condition: e.target.value })}
+                    className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2.5 text-[14px] font-serif text-[#1A1A1A] cursor-pointer"
+                  >
+                    <option value="well_maintained">Well-Maintained (Move-in Condition, minor touch-ups)</option>
+                    <option value="designer">High-End Designer Renovation (&lt; 3 years old)</option>
+                    <option value="original">Original Developer Bare / Basic Condition</option>
+                    <option value="needs_overhaul">Needs Major Overhaul / Heavy Renovation</option>
+                  </select>
+                </div>
+
+                {/* Conditional Seller Inputs if role === 'seller' */}
+                {formValues.role === 'seller' && (
+                  <div className="md:col-span-2 p-4 bg-[#FAF8F5] rounded-xs border border-[#8C7355]/30 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <DollarSign size={16} className="text-[#8C7355]" />
+                      <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#8C7355]">
+                        Seller Conveyance & Net Proceeds Ledger
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-[#1A1A1A]/70 block mb-1">
+                          Outstanding Bank Loan ($)
+                        </label>
+                        <input
+                          type="number"
+                          value={formValues.outstandingLoan}
+                          onChange={(e) =>
+                            setFormValues({ ...formValues, outstandingLoan: Number(e.target.value) || 0 })
+                          }
+                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-serif"
+                        />
+                      </div>
+                      <div>
+                        <label className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-[#1A1A1A]/70 block mb-1">
+                          CPF Principal + 2.5% Accrued ($)
+                        </label>
+                        <input
+                          type="number"
+                          value={formValues.cpfRefund}
+                          onChange={(e) =>
+                            setFormValues({ ...formValues, cpfRefund: Number(e.target.value) || 0 })
+                          }
+                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-serif"
+                        />
+                      </div>
+                      <div>
+                        <label className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-[#1A1A1A]/70 block mb-1">
+                          Years Held (SSD Check)
+                        </label>
+                        <select
+                          value={formValues.sellerHoldingYears}
+                          onChange={(e) =>
+                            setFormValues({ ...formValues, sellerHoldingYears: Number(e.target.value) || 4 })
+                          }
+                          className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-xs p-2 text-sm font-serif"
+                        >
+                          <option value="1">≤ 1 Year (12% SSD)</option>
+                          <option value="2">1 to 2 Years (8% SSD)</option>
+                          <option value="3">2 to 3 Years (4% SSD)</option>
+                          <option value="4">&gt; 3 Years (0% SSD - Exempt)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <div className="md:col-span-2 mt-2">
                   <button
                     id="valuation-calculate-btn"
                     type="submit"
                     disabled={isCalculating}
-                    className="w-full bg-[#1A1A1A] hover:bg-[#8C7355] text-[#F5F2ED] py-4 rounded-sm font-sans text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99] disabled:opacity-75"
+                    className="w-full bg-[#1A1A1A] hover:bg-[#8C7355] text-[#F5F2ED] py-4 rounded-xs font-sans text-[11px] font-bold uppercase tracking-[0.2em] transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
                   >
                     {isCalculating ? (
                       <span className="flex items-center gap-2">
                         <span className="animate-spin inline-block w-4 h-4 border-2 border-[#F5F2ED] border-t-transparent rounded-full" />
-                        Synthesizing Market Transactions...
+                        Synthesizing URA Ledgers & Price Indices...
                       </span>
                     ) : (
                       <>
-                        <span>Calculate Valuation</span>
-                        <span className="text-xs">→</span>
+                        <span>
+                          Run {formValues.role === 'buyer' ? 'Buyer Acquisition' : formValues.role === 'seller' ? 'Seller Liquidation' : 'Market'} Appraisal
+                        </span>
+                        <ArrowRight size={15} />
                       </>
                     )}
                   </button>
@@ -324,119 +667,85 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
         </div>
       </section>
 
-      {/* Features Bento Grid */}
-      <section className="max-w-[1200px] mx-auto px-5 md:px-16 py-20 md:py-28">
-        <div className="text-center mb-14 md:mb-16">
-          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
-            Analytical Foundation
-          </span>
-          <h2 className="font-serif text-[32px] md:text-[40px] text-[#1A1A1A] font-light">
-            Precision Meets Insight
-          </h2>
-          <div className="editorial-rule mx-auto my-4" />
-          <p className="font-serif text-[17px] text-[#1A1A1A]/75 max-w-2xl mx-auto leading-relaxed">
-            Our platform integrates millions of data points to deliver unparalleled accuracy in an ever-shifting market landscape.
-          </p>
-        </div>
+      {/* Property Price Index & Location Stats Section (Always Visible) */}
+      <section className="max-w-[1240px] mx-auto px-5 md:px-12 py-12">
+        <PropertyPriceIndexCard
+          stats={locationStats}
+          sqft={Number(formValues.size) || 1200}
+        />
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Feature 1: Real-time Valuations */}
-          <div className="bg-[#FFFFFF] rounded-sm p-8 md:p-10 shadow-[0_10px_30px_-10px_rgba(26,26,26,0.05)] border border-[#1A1A1A]/10 flex flex-col justify-between hover:border-[#8C7355] transition-all duration-300 group">
-            <div>
-              <div className="w-12 h-12 rounded-full bg-[#E2DFD8]/60 flex items-center justify-center text-[#1A1A1A] mb-6">
-                <span className="material-symbols-outlined text-[24px]" data-icon="monitoring">
-                  monitoring
-                </span>
-              </div>
-              <h3 className="font-serif text-[26px] font-normal text-[#1A1A1A] mb-3 group-hover:italic transition-all">
-                Real-time Valuations
-              </h3>
-              <p className="font-serif text-[16px] leading-[1.65] text-[#1A1A1A]/75">
-                Our proprietary algorithms constantly ingest live transactional data to ensure your property's appraisal reflects the exact pulse of the current market down to the minute.
-              </p>
-            </div>
+      {/* Gemini AI Insight Panel Section */}
+      <section className="max-w-[1240px] mx-auto px-5 md:px-12 pb-16">
+        <GeminiInsightPanel
+          role={formValues.role}
+          district={formValues.district}
+          districtName={selectedDistrictInfo.name}
+          propertyType={formValues.propertyType}
+          size={Number(formValues.size) || 1200}
+          level={formValues.level}
+          tenure={formValues.tenure}
+          leaseRemaining={formValues.leaseRemainingYears}
+          facing={formValues.facing}
+          amenities={formValues.amenityProximity}
+          condition={formValues.condition}
+          valuationMedian={locationStats.medianPrice}
+          valuationMin={locationStats.minPrice}
+          valuationMax={locationStats.maxPrice}
+          medianPsf={locationStats.medianPsf}
+          trajectoryCAGR={selectedDistrictInfo.annualGrowthRate}
+        />
+      </section>
 
-            <div className="mt-8 pt-6 border-t border-[#1A1A1A]/10">
-              <button
-                id="feature-explore-methodology-btn"
-                onClick={() => onNavigateTab('about')}
-                className="text-[#8C7355] hover:text-[#1A1A1A] font-sans text-[10px] font-bold uppercase tracking-[0.2em] transition-colors flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>Explore Methodology</span>
-                <span className="text-xs">→</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Feature 2: Expert Market Insights */}
-          <div className="bg-[#FFFFFF] rounded-sm p-8 md:p-10 shadow-[0_10px_30px_-10px_rgba(26,26,26,0.05)] border border-[#1A1A1A]/10 flex flex-col justify-between hover:border-[#8C7355] transition-all duration-300 group">
-            <div>
-              <div className="w-12 h-12 rounded-full bg-[#E2DFD8]/60 flex items-center justify-center text-[#1A1A1A] mb-6">
-                <span className="material-symbols-outlined text-[24px]" data-icon="lightbulb">
-                  lightbulb
-                </span>
-              </div>
-              <h3 className="font-serif text-[26px] font-normal text-[#1A1A1A] mb-3 group-hover:italic transition-all">
-                Expert Market Insights
-              </h3>
-              <p className="font-serif text-[16px] leading-[1.65] text-[#1A1A1A]/75">
-                Go beyond the numbers. Read exclusive reports, trend forecasts, and neighborhood analysis curated by top-tier real estate economists and architectural authorities.
-              </p>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-[#1A1A1A]/10">
-              <button
-                id="feature-read-reports-btn"
-                onClick={() => onNavigateTab('trends')}
-                className="text-[#8C7355] hover:text-[#1A1A1A] font-sans text-[10px] font-bold uppercase tracking-[0.2em] transition-colors flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>Read Latest Reports</span>
-                <span className="text-xs">→</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Full-width Trajectory Predictor Banner for Home Buyers */}
-        <div className="mt-10 bg-[#1A1A1A] text-[#F5F2ED] rounded-sm p-8 md:p-12 border border-[#8C7355]/30 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      {/* Trajectory Predictor Banner for Home Buyers */}
+      <section className="max-w-[1240px] mx-auto px-5 md:px-12 pb-20">
+        <div className="bg-[#1A1A1A] text-[#F5F2ED] rounded-sm p-8 md:p-12 border border-[#8C7355]/30 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="max-w-2xl relative z-10">
             <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355] block mb-2">
-              Forward Horizon Modeling
+              Forward Horizon Modeling • Spec Section 4
             </span>
             <h3 className="font-serif text-[28px] md:text-[34px] font-light text-[#F5F2ED] mb-3">
-              Home Buyer Price Trajectory Predictor
+              Home Buyer Price Trajectory & Confidence Predictor
             </h3>
             <p className="font-serif text-[15px] md:text-[16px] text-[#F5F2ED]/75 leading-relaxed">
-              Will your prospective property compound, plateau, or accelerate? Simulate forward macroeconomic trajectories across 3 to 15 years with Monte Carlo corridors, cumulative rental returns, and mortgage equity projections.
+              Model price trajectories with 90% confidence intervals for {formValues.district} across 1 to 10 years. Includes loan amortization curves, rental cashflow yield compounding, and Seller's Stamp Duty (SSD) holding milestones.
             </p>
           </div>
           <div className="relative z-10 shrink-0">
             <button
               id="launch-trajectory-banner-btn"
-              onClick={() => onNavigateTab('trajectory')}
-              className="bg-[#8C7355] hover:bg-[#A38A6D] text-[#F5F2ED] px-7 py-4 rounded-sm font-sans text-[11px] font-bold uppercase tracking-[0.2em] transition-all flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-xl"
+              onClick={() => {
+                if (onPredictTrajectory) {
+                  onPredictTrajectory({
+                    currentPrice: locationStats.medianPrice,
+                    sqft: Number(formValues.size) || 1200,
+                    propertyType: formValues.propertyType,
+                    district: formValues.district.toLowerCase(),
+                  });
+                } else {
+                  onNavigateTab('trajectory');
+                }
+              }}
+              className="bg-[#8C7355] hover:bg-[#A38A6D] text-[#F5F2ED] px-7 py-4 rounded-xs font-sans text-[11px] font-bold uppercase tracking-[0.2em] transition-all flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-xl"
             >
-              <span>Launch Predictor</span>
-              <span>→</span>
+              <span>Forecast Trajectory (1–10 Yrs)</span>
+              <ArrowRight size={16} />
             </button>
           </div>
         </div>
       </section>
 
-      {/* Valuation Result Modal / Report */}
+      {/* Valuation Result Modal / Full Report */}
       {showResultModal && calculationResult && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-[#F5F2ED] text-[#1A1A1A] rounded-sm max-w-2xl w-full p-6 sm:p-10 shadow-2xl border border-[#1A1A1A]/20 relative animate-scaleUp my-8">
-            {/* Framed Inset Line */}
-            <div className="absolute inset-3 border border-[#1A1A1A]/10 pointer-events-none rounded-xs" />
-
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-[#F5F2ED] text-[#1A1A1A] rounded-sm max-w-3xl w-full p-6 sm:p-10 shadow-2xl border border-[#1A1A1A]/20 relative animate-scaleUp my-8 max-h-[90vh] overflow-y-auto">
             <div className="relative z-10 flex items-center justify-between border-b border-[#1A1A1A]/10 pb-4 mb-6">
               <div>
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-[#8C7355]">
-                  Automated Valuation Report
+                  Automated Valuation Report • {calculationResult.role.toUpperCase()}
                 </span>
                 <h3 className="font-serif text-[28px] font-light text-[#1A1A1A]">
-                  Estimated Market Appraisal
+                  Certified Market Valuation
                 </h3>
               </div>
               <button
@@ -445,9 +754,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                 className="p-2 text-[#1A1A1A]/60 hover:text-[#1A1A1A] rounded-full hover:bg-[#E2DFD8]/40 cursor-pointer"
                 aria-label="Close valuation report"
               >
-                <span className="material-symbols-outlined" data-icon="close">
-                  close
-                </span>
+                ✕
               </button>
             </div>
 
@@ -455,7 +762,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
             <div className="relative z-10 bg-[#FFFFFF] rounded-sm p-6 border border-[#1A1A1A]/10 mb-6">
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
                 <span className="font-sans text-[10px] uppercase font-bold text-[#8C7355] tracking-[0.2em]">
-                  Indicative Market Value
+                  Indicative Valuation Median
                 </span>
                 <span className="font-sans text-[10px] font-bold uppercase tracking-[0.15em] px-2.5 py-0.5 rounded-sm bg-[#E2DFD8] text-[#1A1A1A]">
                   {calculationResult.confidenceScore}% Algorithm Confidence
@@ -467,19 +774,69 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
               </div>
 
               <div className="font-serif text-[15px] text-[#1A1A1A]/70">
-                Expected Range:{' '}
+                Recommended Price Corridor:{' '}
                 <strong className="text-[#1A1A1A] font-semibold">
                   ${calculationResult.estimatedMin.toLocaleString()} – ${calculationResult.estimatedMax.toLocaleString()}
                 </strong>
               </div>
             </div>
 
+            {/* If Seller Mode, Display Net Proceeds Breakdown */}
+            {calculationResult.sellerNetProceeds && (
+              <div className="relative z-10 bg-[#FAF8F5] p-5 rounded-xs border-2 border-[#8C7355]/40 mb-6">
+                <div className="flex justify-between items-center border-b border-[#1A1A1A]/10 pb-2 mb-3">
+                  <h4 className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#8C7355]">
+                    Seller Net Proceeds Breakdown
+                  </h4>
+                  <span className="text-[11px] font-sans text-emerald-800 font-bold">
+                    SSD Status: {calculationResult.sellerNetProceeds.ssdRate === 0 ? 'Exempt (0%)' : `${calculationResult.sellerNetProceeds.ssdRate}%`}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mb-4">
+                  <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
+                    <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">Selling Price</span>
+                    <span className="font-serif text-[16px] text-[#1A1A1A]">
+                      ${calculationResult.sellerNetProceeds.sellingPrice.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
+                    <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">Bank Loan</span>
+                    <span className="font-serif text-[16px] text-red-700">
+                      -${calculationResult.sellerNetProceeds.outstandingLoan.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
+                    <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">CPF Refund</span>
+                    <span className="font-serif text-[16px] text-red-700">
+                      -${calculationResult.sellerNetProceeds.cpfRefund.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="p-2 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/10">
+                    <span className="text-[10px] uppercase text-[#1A1A1A]/60 font-sans block">Agent (2%) + Legal</span>
+                    <span className="font-serif text-[16px] text-red-700">
+                      -${(calculationResult.sellerNetProceeds.agentCommission + calculationResult.sellerNetProceeds.legalFee).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-[#FFFFFF] rounded-xs border border-emerald-600/30 flex justify-between items-center">
+                  <span className="font-sans text-[11px] font-bold uppercase tracking-[0.15em] text-[#1A1A1A]">
+                    Estimated Net Cash in Hand
+                  </span>
+                  <span className="font-serif text-[24px] font-normal text-emerald-800">
+                    ${calculationResult.sellerNetProceeds.netCashInHand.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* Metric Breakdown Grid */}
             <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6 text-[14px]">
               <div className="bg-[#FFFFFF] p-4 rounded-sm border border-[#1A1A1A]/10">
-                <div className="font-sans text-[#8C7355] text-[10px] uppercase font-bold tracking-[0.15em]">Price per Sqft</div>
+                <div className="font-sans text-[#8C7355] text-[10px] uppercase font-bold tracking-[0.15em]">Unit PSF</div>
                 <div className="font-serif text-[22px] font-normal text-[#1A1A1A] mt-1">
-                  ${Math.round(calculationResult.estimatedMedian / Number(formValues.size || 1)).toLocaleString()} psf
+                  ${calculationResult.psfMedian} psf
                 </div>
                 <div className="font-sans text-[11px] text-[#1A1A1A]/60 mt-0.5">
                   Range: ${calculationResult.psfMin} – ${calculationResult.psfMax}
@@ -492,66 +849,44 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                   ${calculationResult.monthlyRentalEstimate.toLocaleString()}/mo
                 </div>
                 <div className="font-sans text-[11px] text-[#1A1A1A]/60 mt-0.5">
-                  {calculationResult.annualYieldRate}% Est. Gross Yield
+                  {calculationResult.annualYieldRate}% Gross Yield
                 </div>
               </div>
 
               <div className="bg-[#FFFFFF] p-4 rounded-sm border border-[#1A1A1A]/10 col-span-2 sm:col-span-1">
-                <div className="font-sans text-[#8C7355] text-[10px] uppercase font-bold tracking-[0.15em]">Property Specs</div>
+                <div className="font-sans text-[#8C7355] text-[10px] uppercase font-bold tracking-[0.15em]">Location Index</div>
                 <div className="font-serif text-[22px] font-normal text-[#1A1A1A] mt-1">
-                  {formValues.size} sqft
+                  {calculationResult.districtPriceIndex} pts
                 </div>
-                <div className="font-sans text-[11px] text-[#1A1A1A]/60 mt-0.5 capitalize">
-                  {formValues.propertyType} • {formValues.facing} Facing
-                </div>
-              </div>
-            </div>
-
-            {/* Driver Breakdown */}
-            <div className="relative z-10 border-t border-[#1A1A1A]/10 pt-4 mb-6">
-              <h4 className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-[#8C7355] mb-3">
-                Key Value Drivers
-              </h4>
-              <div className="space-y-2 text-[14px] text-[#1A1A1A]/80 font-serif">
-                <div className="flex justify-between items-center py-1 border-b border-[#1A1A1A]/5">
-                  <span>Facing Orientation Premium ({formValues.facing})</span>
-                  <span className="font-sans font-semibold text-[#1A1A1A] text-xs">
-                    {calculationResult.facingFactorPct >= 0 ? `+${calculationResult.facingFactorPct}%` : `${calculationResult.facingFactorPct}%`}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center py-1 border-b border-[#1A1A1A]/5">
-                  <span>Transit Proximity Factor</span>
-                  <span className="font-sans font-semibold text-[#1A1A1A] text-xs">
-                    {calculationResult.transitFactorPct >= 0 ? `+${calculationResult.transitFactorPct}%` : `${calculationResult.transitFactorPct}%`}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center py-1">
-                  <span>Market Trajectory (Trailing 12 Mo)</span>
-                  <span className="font-sans font-semibold text-[#8C7355] text-xs">+2.4% QoQ</span>
+                <div className="font-sans text-[11px] text-[#1A1A1A]/60 mt-0.5">
+                  Nat'l: {calculationResult.nationalPriceIndex} ({calculationResult.indexSpreadPct >= 0 ? `+${calculationResult.indexSpreadPct}%` : `${calculationResult.indexSpreadPct}%`})
                 </div>
               </div>
             </div>
 
             {/* Actions */}
             <div className="relative z-10 flex flex-col gap-3 pt-2">
-              {onPredictTrajectory && (
-                <button
-                  id="modal-predict-trajectory-btn"
-                  onClick={() => {
-                    setShowResultModal(false);
+              <button
+                id="modal-predict-trajectory-btn"
+                onClick={() => {
+                  setShowResultModal(false);
+                  if (onPredictTrajectory) {
                     onPredictTrajectory({
                       currentPrice: calculationResult.estimatedMedian,
-                      sqft: formValues.size,
-                      propertyType: formValues.propertyType === 'landed' ? 'landed' : 'private',
+                      sqft: Number(formValues.size) || 1200,
+                      propertyType: formValues.propertyType,
+                      district: formValues.district.toLowerCase(),
                       estimatedGrossYield: calculationResult.annualYieldRate,
                     });
-                  }}
-                  className="w-full bg-[#8C7355] hover:bg-[#A38A6D] text-[#F5F2ED] py-3.5 px-4 rounded-sm font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-center transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
-                >
-                  <TrendingUp size={15} />
-                  <span>Forecast Price Trajectory for this Property (3–15 Yrs) →</span>
-                </button>
-              )}
+                  } else {
+                    onNavigateTab('trajectory');
+                  }
+                }}
+                className="w-full bg-[#8C7355] hover:bg-[#A38A6D] text-[#F5F2ED] py-3.5 px-4 rounded-xs font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-center transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
+              >
+                <TrendingUp size={15} />
+                <span>Forecast Price Trajectory with Confidence Intervals (1–10 Yrs) →</span>
+              </button>
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
@@ -560,14 +895,14 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                     setShowResultModal(false);
                     onOpenBookAppraisal(formValues);
                   }}
-                  className="flex-1 bg-[#1A1A1A] hover:bg-[#8C7355] text-[#F5F2ED] py-3.5 px-4 rounded-sm font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-center transition-colors cursor-pointer"
+                  className="flex-1 bg-[#1A1A1A] hover:bg-[#8C7355] text-[#F5F2ED] py-3.5 px-4 rounded-xs font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-center transition-colors cursor-pointer"
                 >
-                  Book In-Person Appraisal
+                  Book Valuation Surveyor Consultation
                 </button>
                 <button
                   id="save-valuation-record-btn"
                   onClick={handleSaveResult}
-                  className="sm:w-auto bg-transparent border border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-[#F5F2ED] py-3.5 px-5 rounded-sm font-sans text-[10px] font-bold uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="sm:w-auto bg-transparent border border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-[#F5F2ED] py-3.5 px-5 rounded-xs font-sans text-[10px] font-bold uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {savedSuccess ? (
                     <>
@@ -577,7 +912,7 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
                   ) : (
                     <>
                       <Bookmark size={16} />
-                      <span>Save Record</span>
+                      <span>Save Valuation</span>
                     </>
                   )}
                 </button>

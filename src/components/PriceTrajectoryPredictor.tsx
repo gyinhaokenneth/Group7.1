@@ -25,6 +25,9 @@ import {
   ChevronRight,
   HelpCircle,
 } from 'lucide-react';
+import { PropertyPriceIndexCard } from './PropertyPriceIndexCard';
+import { GeminiInsightPanel } from './GeminiInsightPanel';
+import { SINGAPORE_DISTRICTS, getDistrictPriceStats } from '../data/singaporeDistricts';
 
 interface PriceTrajectoryPredictorProps {
   onNavigateTab: (tab: TabType) => void;
@@ -50,6 +53,16 @@ const BUYER_PRESETS = [
     price: 1380000,
     sqft: 780,
     type: 'private',
+    district: 'rcr',
+    years: 5,
+    scenario: 'baseline' as TrajectoryScenario,
+  },
+  {
+    label: 'HDB 5-Room Prime Resale (Bishan DBSS)',
+    badge: 'HDB Resale',
+    price: 1390000,
+    sqft: 1290,
+    type: 'hdb',
     district: 'rcr',
     years: 5,
     scenario: 'baseline' as TrajectoryScenario,
@@ -256,6 +269,31 @@ export const PriceTrajectoryPredictor: React.FC<PriceTrajectoryPredictorProps> =
     mortgageRate,
     scenario,
   ]);
+
+  // Resolve district code to Singapore district database
+  const normalizedDistrict = useMemo(() => {
+    const d = district.toLowerCase();
+    if (d === 'ccr') return 'D09';
+    if (d === 'rcr') return 'D03';
+    if (d === 'ocr') return 'D19';
+    if (d === 'eastcoast') return 'D15';
+    if (d === 'marina') return 'D01';
+    const upper = district.toUpperCase();
+    if (SINGAPORE_DISTRICTS[upper]) return upper;
+    return 'D09';
+  }, [district]);
+
+  const districtInfo = useMemo(() => {
+    return SINGAPORE_DISTRICTS[normalizedDistrict] || SINGAPORE_DISTRICTS.D09;
+  }, [normalizedDistrict]);
+
+  const districtStats = useMemo(() => {
+    return getDistrictPriceStats(
+      normalizedDistrict,
+      (propertyType === 'landed' ? 'landed' : propertyType === 'hdb' ? 'hdb' : 'private'),
+      sqft
+    );
+  }, [normalizedDistrict, propertyType, sqft]);
 
   // Load a quick-select preset
   const handleApplyPreset = (preset: (typeof BUYER_PRESETS)[0]) => {
@@ -624,9 +662,9 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     onChange={(e) => setPropertyType(e.target.value)}
                     className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-2.5 py-2 text-[13px] font-serif text-[#1A1A1A] focus:outline-none focus:border-[#8C7355] cursor-pointer"
                   >
-                    <option value="private">Private Condominium</option>
-                    <option value="landed">Landed Estate</option>
-                    <option value="hdb">Executive Residence</option>
+                    <option value="private">Private (Condominium / Apt)</option>
+                    <option value="landed">Landed Estate (Bungalow / Semi-D)</option>
+                    <option value="hdb">HDB (Public Housing Resale)</option>
                   </select>
                 </div>
                 <div>
@@ -642,11 +680,28 @@ Notice: This monograph constitutes computational econometric projection modeled 
                     onChange={(e) => setDistrict(e.target.value)}
                     className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/20 rounded-sm px-2.5 py-2 text-[13px] font-serif text-[#1A1A1A] focus:outline-none focus:border-[#8C7355] cursor-pointer"
                   >
-                    <option value="ccr">CCR Prime (D09, 10, 11)</option>
-                    <option value="marina">Marina Core (D01)</option>
-                    <option value="rcr">RCR City Fringe (D03, 04)</option>
-                    <option value="eastcoast">East Coast (D15)</option>
-                    <option value="ocr">Suburban OCR</option>
+                    <optgroup label="Core Central Region (CCR)">
+                      <option value="D01">D01 - Marina Bay / Raffles</option>
+                      <option value="D02">D02 - Tanjong Pagar / Chinatown</option>
+                      <option value="D04">D04 - Harbourfront / Sentosa</option>
+                      <option value="D09">D09 - Orchard / River Valley</option>
+                      <option value="D10">D10 - Tanglin / Bukit Timah</option>
+                      <option value="D11">D11 - Newton / Novena</option>
+                    </optgroup>
+                    <optgroup label="Rest of Central Region (RCR)">
+                      <option value="D03">D03 - Queenstown / Tiong Bahru</option>
+                      <option value="D05">D05 - Buona Vista / Clementi</option>
+                      <option value="D12">D12 - Toa Payoh / Balestier</option>
+                      <option value="D14">D14 - Paya Lebar / Eunos</option>
+                      <option value="D15">D15 - East Coast / Marine Parade</option>
+                      <option value="D20">D20 - Bishan / Ang Mo Kio</option>
+                    </optgroup>
+                    <optgroup label="Outside Central Region (OCR)">
+                      <option value="D19">D19 - Serangoon / Hougang / Punggol</option>
+                      <option value="D22">D22 - Jurong / Lakeside</option>
+                      <option value="D23">D23 - Bukit Batok / Hillview</option>
+                      <option value="D27">D27 - Yishun / Canberra</option>
+                    </optgroup>
                   </select>
                 </div>
               </div>
@@ -1230,6 +1285,34 @@ Notice: This monograph constitutes computational econometric projection modeled 
                 </table>
               </div>
             </div>
+
+            {/* Property Price Index & Location Benchmarks (Spec Section 3 & 5) */}
+            <PropertyPriceIndexCard
+              stats={districtStats}
+              sqft={sqft}
+            />
+
+            {/* Gemini AI Econometric Insight Monograph (Role: Buyer) */}
+            <GeminiInsightPanel
+              role="buyer"
+              district={normalizedDistrict}
+              districtName={districtInfo.name}
+              propertyType={propertyType}
+              size={sqft}
+              level="mid"
+              tenure="99-year Leasehold"
+              leaseRemaining={92}
+              facing="North-South"
+              amenities="Transit & Schools"
+              condition="Well-Maintained"
+              valuationMedian={currentPrice}
+              valuationMin={districtStats.minPrice}
+              valuationMax={districtStats.maxPrice}
+              medianPsf={Math.round(currentPrice / (sqft || 1))}
+              trajectoryCAGR={predictionResult.annualizedCAGR}
+              projected5Y={predictionResult.yearlyBreakdown[Math.min(5, predictionResult.yearlyBreakdown.length - 1)]?.projectedValue}
+              projected10Y={predictionResult.finalProjectedValue}
+            />
 
             {/* Strategic Advice Callout & Surveyor Booking */}
             <div className="bg-[#FFFFFF] rounded-sm p-6 sm:p-8 border border-[#1A1A1A]/10 shadow-[0_10px_30px_-10px_rgba(26,26,26,0.04)] flex flex-col sm:flex-row items-center justify-between gap-6">
