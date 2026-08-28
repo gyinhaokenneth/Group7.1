@@ -44,6 +44,40 @@ const DISTRICT_RATES: Record<string, { name: string; baseGrowth: number; histori
   marina: { name: 'Marina Bay & Financial Core (D01)', baseGrowth: 5.6, historicalPsf: 3100 },
 };
 
+const REGION_TO_DISTRICT: Record<string, string> = {
+  ccr: 'D09',
+  rcr: 'D03',
+  ocr: 'D19',
+  eastcoast: 'D15',
+  marina: 'D01',
+};
+
+/**
+ * The selector offers district codes while DISTRICT_RATES is keyed by region,
+ * so every code missed the lookup: growth silently fell back to Core Central
+ * and the momentum figure rendered as "~% / yr". Callers also arrive with
+ * lowercase codes ('d19'). Normalise everything to a district code.
+ */
+function toDistrictCode(value?: string): string {
+  if (!value) return 'D19';
+  const upper = value.toUpperCase();
+  if (SINGAPORE_DISTRICTS[upper]) return upper;
+  return REGION_TO_DISTRICT[value.toLowerCase()] || 'D19';
+}
+
+/** Per-district growth and PSF, from the district dataset the rest of the app uses. */
+function resolveDistrictRate(value: string): { name: string; baseGrowth: number; historicalPsf: number } {
+  const info = SINGAPORE_DISTRICTS[toDistrictCode(value)];
+  if (info) {
+    return {
+      name: `${info.code} - ${info.name}`,
+      baseGrowth: info.annualGrowthRate,
+      historicalPsf: info.basePsfPrivate,
+    };
+  }
+  return DISTRICT_RATES.ccr;
+}
+
 // Preset Profiles for quick home buyer scenario testing
 
 export const PriceTrajectoryPredictor: React.FC<PriceTrajectoryPredictorProps> = ({
@@ -56,7 +90,7 @@ export const PriceTrajectoryPredictor: React.FC<PriceTrajectoryPredictorProps> =
   const [currentPrice, setCurrentPrice] = useState<number>(initialParams?.currentPrice || 1850000);
   const [sqft, setSqft] = useState<number>(initialParams?.sqft || 1150);
   const [propertyType, setPropertyType] = useState<string>(initialParams?.propertyType || 'private');
-  const [district, setDistrict] = useState<string>(initialParams?.district || 'ccr');
+  const [district, setDistrict] = useState<string>(toDistrictCode(initialParams?.district));
   const [holdingYears, setHoldingYears] = useState<number>(initialParams?.holdingYears || 5);
   const [scenario, setScenario] = useState<TrajectoryScenario>(initialParams?.scenario || 'historical');
   const [customGrowth, setCustomGrowth] = useState<number>(initialParams?.customAnnualGrowth || 4.5);
@@ -77,7 +111,7 @@ export const PriceTrajectoryPredictor: React.FC<PriceTrajectoryPredictorProps> =
 
   // Calculate annual trajectory rate according to scenario and district
   const annualTrajectoryRate = useMemo(() => {
-    const districtInfo = DISTRICT_RATES[district] || DISTRICT_RATES.ccr;
+    const districtInfo = resolveDistrictRate(district);
     let rate = districtInfo.baseGrowth;
 
     if (scenario === 'conservative') {
@@ -247,7 +281,7 @@ export const PriceTrajectoryPredictor: React.FC<PriceTrajectoryPredictorProps> =
     if (onSavePrediction) {
       const newPrediction: SavedTrajectoryPrediction = {
         id: `pred-${Date.now()}`,
-        title: `${DISTRICT_RATES[district]?.name.split(' ')[0]} ${propertyType.toUpperCase()} (${holdingYears}-Yr Forecast)`,
+        title: `${resolveDistrictRate(district).name.split(' ')[0]} ${propertyType.toUpperCase()} (${holdingYears}-Yr Forecast)`,
         result: predictionResult,
         createdAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       };
@@ -271,7 +305,7 @@ ASSET BASELINE PARAMETERS
 Entry Purchase Price: $${currentPrice.toLocaleString()}
 Property Size: ${sqft} SQFT (Entry PSF: $${Math.round(currentPrice / sqft).toLocaleString()})
 Property Class: ${propertyType.toUpperCase()}
-District Corridor: ${DISTRICT_RATES[district]?.name || district}
+District Corridor: ${resolveDistrictRate(district).name}
 Holding Horizon: ${holdingYears} Years (${new Date().getFullYear()} to ${new Date().getFullYear() + holdingYears})
 Trajectory Model: ${scenario.toUpperCase()} (${annualTrajectoryRate}% p.a.)
 
@@ -655,7 +689,7 @@ Notice: This monograph constitutes computational econometric projection modeled 
                       Momentum
                     </div>
                     <div className="font-display font-medium text-[13px]">Historical Trend</div>
-                    <div className="text-[10px] opacity-70 mt-0.5">~{DISTRICT_RATES[district]?.baseGrowth}% / yr</div>
+                    <div className="text-[10px] opacity-70 mt-0.5">~{resolveDistrictRate(district).baseGrowth}% / yr</div>
                   </button>
 
                   <button
