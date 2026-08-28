@@ -179,3 +179,80 @@ export interface AppraisalBooking {
   consultationType: 'in-person' | 'virtual';
   notes?: string;
 }
+
+export interface URATransaction {
+  project: string;
+  street: string;
+  marketSegment?: string;
+  areaSqm: number;
+  areaSqft: number;
+  price: number;
+  psf: number;
+  floorRange: string;
+  noOfUnits: number;
+  contractDate: string;
+  contractDateFormatted: string;
+  sortKey: number;
+  typeOfSale: string;
+  typeOfSaleLabel: 'New Sale' | 'Sub Sale' | 'Resale';
+  propertyType: string;
+  district: string;
+  tenure: string;
+  typeOfArea: string;
+}
+
+export interface URATopProject {
+  project: string;
+  street: string;
+  transactionCount: number;
+  medianPsf: number;
+  latestDate: string;
+  latestPrice: number;
+  latestPsf: number;
+  tenure: string;
+}
+
+export interface URADistrictStats {
+  district: string;
+  districtNumber: string;
+  batch: number;
+  totalTransactions: number;
+  uniqueDevelopments: number;
+  medianPsf: number;
+  minPsf: number;
+  maxPsf: number;
+  p25Psf: number;
+  p75Psf: number;
+  medianPrice: number;
+  minPrice: number;
+  maxPrice: number;
+  avgPrice: number;
+  topProjects: URATopProject[];
+  bySaleType: {
+    newSale: number;
+    resale: number;
+    subSale: number;
+  };
+  byPropertyType: Record<string, number>;
+  recentTransactions: URATransaction[];
+  source: 'live_ura_api';
+  fetchedAt: string;
+}
+
+export interface URAStatusResponse {
+  status: string;
+  service: string;
+  token: {
+    active: boolean;
+    expiresInMinutes: number;
+    tokenExcerpt: string | null;
+    lastError: string | null;
+  };
+  cache: {
+    batchesLoaded: number[];
+    allMergedLoaded: boolean;
+    totalProjectsCached: number;
+  };
+  timestamp: string;
+}
+

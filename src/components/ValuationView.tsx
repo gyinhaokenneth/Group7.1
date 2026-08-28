@@ -13,6 +13,7 @@ import {
 } from '../data/singaporeDistricts';
 import { PropertyPriceIndexCard } from './PropertyPriceIndexCard';
 import { GeminiInsightPanel } from './GeminiInsightPanel';
+import { URATransactionFeed } from './URATransactionFeed';
 import {
   ArrowRight,
   CheckCircle2,
@@ -672,6 +673,32 @@ export const ValuationView: React.FC<ValuationViewProps> = ({
         <PropertyPriceIndexCard
           stats={locationStats}
           sqft={Number(formValues.size) || 1200}
+        />
+      </section>
+
+      {/* Official Singapore URA DataService Live Transaction Registry */}
+      <section className="max-w-[1240px] mx-auto px-5 md:px-12 pb-12">
+        <URATransactionFeed
+          district={formValues.district}
+          districtName={selectedDistrictInfo.name}
+          onApplyBenchmark={(tx) => {
+            setFormValues((prev) => ({
+              ...prev,
+              district: tx.district,
+              size: tx.sizeSqft,
+              propertyType: tx.propertyType.toLowerCase().includes('condo') || tx.propertyType.toLowerCase().includes('apartment')
+                ? 'private'
+                : tx.propertyType.toLowerCase().includes('terrace') || tx.propertyType.toLowerCase().includes('detached')
+                ? 'landed'
+                : prev.propertyType,
+              tenure: tx.tenure.toLowerCase().includes('freehold') ? 'freehold' : '99yr',
+              level: tx.floorRange.includes('01') || tx.floorRange.includes('05') ? 'low' : tx.floorRange.includes('15') || tx.floorRange.includes('20') || tx.floorRange.includes('25') ? 'high' : 'mid',
+            }));
+            const formEl = document.getElementById('valuation-calculator-form');
+            if (formEl) {
+              formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }}
         />
       </section>
 

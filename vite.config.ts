@@ -3,11 +3,42 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig, Plugin } from 'vite';
 
-function apiInsightPlugin(): Plugin {
+function apiServerPlugin(): Plugin {
   return {
-    name: 'api-insight-plugin',
+    name: 'api-server-plugin',
     configureServer(server) {
-      server.middlewares.use('/api/insight', async (req, res, next) => {
+      // Helper to ensure Express-like methods exist on Connect res
+      const polyfillRes = (res: any) => {
+        if (!res.status) {
+          res.status = (code: number) => {
+            res.statusCode = code;
+            return res;
+          };
+        }
+        if (!res.json) {
+          res.json = (data: any) => {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(data));
+            return res;
+          };
+        }
+      };
+
+      // URA DataService API handler
+      server.middlewares.use('/api/ura', async (req: any, res: any, next: any) => {
+        polyfillRes(res);
+        try {
+          const handlerModule = await import('./api/ura.js');
+          await handlerModule.default(req, res);
+        } catch (err: any) {
+          console.error('API URA error:', err);
+          res.status(500).json({ error: err.message || 'Internal Server Error' });
+        }
+      });
+
+      // Gemini AI Insight API handler
+      server.middlewares.use('/api/insight', async (req: any, res: any, next: any) => {
+        polyfillRes(res);
         if (req.method === 'POST') {
           let body = '';
           req.on('data', (chunk: any) => {
@@ -15,21 +46,21 @@ function apiInsightPlugin(): Plugin {
           });
           req.on('end', async () => {
             try {
-              (req as any).body = JSON.parse(body || '{}');
+              req.body = JSON.parse(body || '{}');
             } catch {
-              (req as any).body = {};
+              req.body = {};
             }
             try {
               const handlerModule = await import('./api/insight.js');
               await handlerModule.default(req, res);
             } catch (err: any) {
               console.error('API Insight error:', err);
-              res.statusCode = 500;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: err.message || 'Internal Server Error' }));
+              res.status(500).json({ error: err.message || 'Internal Server Error' });
             }
           });
           return;
+        } else if (req.method === 'OPTIONS') {
+          return res.status(200).end();
         }
         next();
       });
@@ -39,7 +70,7 @@ function apiInsightPlugin(): Plugin {
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), apiInsightPlugin()],
+    plugins: [react(), tailwindcss(), apiServerPlugin()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

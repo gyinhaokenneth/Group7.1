@@ -194,13 +194,19 @@ Respond in valid, pure JSON without Markdown code blocks or wrapping quotes. The
   "strategicAdvice": ["Concrete actionable step 1", "Concrete actionable step 2", "Concrete actionable step 3"]
 }`;
 
-    const response = await ai.models.generateContent({
+    const generatePromise = ai.models.generateContent({
       model: 'gemini-3.7-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
       },
     });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('AI inference timeout')), 3500)
+    );
+
+    const response = await Promise.race([generatePromise, timeoutPromise]);
 
     const responseText = response.text || '';
     let parsedInsight;
@@ -233,13 +239,15 @@ Respond in valid, pure JSON without Markdown code blocks or wrapping quotes. The
       },
     });
   } catch (error) {
-    console.error('Error generating Gemini AI insight:', error);
-    // On unexpected error, fall back gracefully to econometric insight
+    console.warn('Gemini AI generation fallback activated:', error.message);
+    // On quota exhaustion, timeout, or upstream issue, fall back gracefully to econometric insight
     const fallbackInsight = generateHeuristicInsight(sanitizedParams);
     return res.status(200).json({
       success: true,
       mode: 'fallback_heuristic',
-      notice: 'Gemini request encountered an upstream issue; supplied high-fidelity econometric fallback.',
+      notice: String(error.message || '').includes('quota') || String(error.message || '').includes('resource_exhausted')
+        ? 'Gemini API token quota reached. Seamlessly served verified institutional econometric engine.'
+        : 'Gemini request deferred; supplied high-fidelity econometric fallback.',
       insight: fallbackInsight,
     });
   }

@@ -3,6 +3,7 @@ import { TRAILING_12_MONTHS_TREND, HOTSPOT_AREAS } from '../data/trends';
 import { HotspotArea, TabType } from '../types';
 import { TrendingUp, MapPin, X, ArrowUpRight, Layers, ZoomIn, Info, Sparkles, ArrowRight, Building } from 'lucide-react';
 import { PropertyPriceIndexCard } from './PropertyPriceIndexCard';
+import { URATransactionFeed } from './URATransactionFeed';
 import { SINGAPORE_DISTRICTS, getDistrictPriceStats } from '../data/singaporeDistricts';
 
 interface MarketTrendsViewProps {
@@ -581,6 +582,14 @@ export const MarketTrendsView: React.FC<MarketTrendsViewProps> = ({
             </div>
 
             <PropertyPriceIndexCard stats={explorerStats} sqft={explorerSqft} />
+
+            {/* Official Singapore URA DataService Integration */}
+            <div className="mt-8">
+              <URATransactionFeed
+                district={selectedExplorerDistrict}
+                districtName={explorerStats.districtName}
+              />
+            </div>
           </div>
         </div>
 
