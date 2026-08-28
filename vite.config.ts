@@ -36,6 +36,18 @@ function apiServerPlugin(): Plugin {
         }
       });
 
+      // URA Property Price Index handler
+      server.middlewares.use('/api/price-index', async (req: any, res: any) => {
+        polyfillRes(res);
+        try {
+          const handlerModule = await import('./api/price-index.js');
+          await handlerModule.default(req, res);
+        } catch (err: any) {
+          console.error('API Price Index error:', err);
+          res.status(500).json({ error: err.message || 'Internal Server Error' });
+        }
+      });
+
       // Gemini AI Insight API handler
       server.middlewares.use('/api/insight', async (req: any, res: any, next: any) => {
         polyfillRes(res);

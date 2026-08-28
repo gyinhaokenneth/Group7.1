@@ -276,3 +276,33 @@ export interface URAMonthlyTrend {
   totalTransactions: number;
   generatedAt: string;
 }
+
+export interface URAPriceIndexPoint {
+  quarter: string;
+  index: number | null;
+}
+
+export interface URAPriceIndexSegment {
+  key: 'landed' | 'nonLanded' | 'ccr' | 'rcr' | 'ocr';
+  label: string;
+  fullLabel: string;
+  group: 'type' | 'locality';
+  latest: number | null;
+  qoq: number | null;
+  yoy: number | null;
+  series: URAPriceIndexPoint[];
+}
+
+export interface URAPriceIndex {
+  latestQuarter: string | null;
+  basePeriod: string;
+  quarters: string[];
+  segments: URAPriceIndexSegment[];
+  source: {
+    publisher: string;
+    distributedVia: string;
+    datasets: string[];
+    note: string;
+  };
+  fetchedAt: string;
+}

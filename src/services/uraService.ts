@@ -1,4 +1,4 @@
-import { URADistrictStats, URATransaction, URAStatusResponse, URAMonthlyTrend } from '../types';
+import { URADistrictStats, URATransaction, URAStatusResponse, URAMonthlyTrend, URAPriceIndex } from '../types';
 
 /**
  * Client-side URA DataService API client
@@ -84,6 +84,17 @@ export async function fetchURAMonthlyTrend(
     return await res.json();
   } catch (err) {
     console.warn(`Failed to fetch URA monthly trend for ${districtCode}:`, err);
+    return null;
+  }
+}
+
+export async function fetchURAPriceIndex(quarters = 12): Promise<URAPriceIndex | null> {
+  try {
+    const res = await fetch(`/api/price-index?quarters=${quarters}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn('Failed to fetch URA price index:', err);
     return null;
   }
 }

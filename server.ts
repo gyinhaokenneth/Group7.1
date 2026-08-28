@@ -3,6 +3,7 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import uraHandler from './api/_ura-core.js';
 import insightHandler from './api/insight.js';
+import priceIndexHandler from './api/price-index.js';
 
 async function startServer() {
   const app = express();
@@ -21,6 +22,16 @@ async function startServer() {
       await uraHandler(req, res);
     } catch (err: any) {
       console.error('Express URA Error:', err);
+      res.status(500).json({ error: err.message || 'Internal Server Error' });
+    }
+  });
+
+  // URA Property Price Index (via data.gov.sg)
+  app.all('/api/price-index*', async (req, res) => {
+    try {
+      await priceIndexHandler(req, res);
+    } catch (err: any) {
+      console.error('Express Price Index Error:', err);
       res.status(500).json({ error: err.message || 'Internal Server Error' });
     }
   });

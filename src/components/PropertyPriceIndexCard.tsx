@@ -1,6 +1,7 @@
 import React from 'react';
 import { CalculatedDistrictStats } from '../data/singaporeDistricts';
 import { Activity, TrendingUp, BarChart3, MapPin, Layers, Info } from 'lucide-react';
+import { URAPriceIndexPanel } from './URAPriceIndexPanel';
 
 interface PropertyPriceIndexCardProps {
   stats: CalculatedDistrictStats;
@@ -87,6 +88,9 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
           </p>
         </div>
       </div>
+
+      {/* Official URA price index: landed / non-landed and CCR / RCR / OCR */}
+      <URAPriceIndexPanel region={stats.region} propertyType={stats.propertyType} />
 
       {/* Min, Median, Max Price Distribution for Selected Location */}
       <div className="p-5 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/15 shadow-2xs">
