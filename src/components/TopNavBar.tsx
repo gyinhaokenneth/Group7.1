@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TabType } from '../types';
-import { Bell, User, Menu, X } from 'lucide-react';
+import { Bell, User, Menu, X, Building2 } from 'lucide-react';
 
 interface TopNavBarProps {
   currentTab: TabType;
@@ -37,12 +37,21 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
             onTabChange('valuation');
             setMobileMenuOpen(false);
           }}
-          className="text-left cursor-pointer group flex items-baseline gap-2.5"
+          className="text-left cursor-pointer group flex items-center gap-3.5"
         >
-          <span className="font-serif text-[24px] md:text-[26px] italic font-semibold tracking-tighter text-[#1A1A1A] group-hover:opacity-80 transition-opacity">
-            ESTATEANALYTICS
-          </span>
-          <span className="hidden sm:inline font-sans text-[9px] font-bold uppercase tracking-[0.25em] text-[#8C7355]">
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-xs bg-[#1A1A1A] text-[#F5F2ED] flex items-center justify-center border border-[#8C7355]/30 group-hover:bg-[#8C7355] transition-colors shrink-0 shadow-2xs">
+            <Building2 size={18} className="text-[#F5F2ED]" />
+          </div>
+          <div className="flex flex-col text-left justify-center">
+            <span className="font-serif text-[21px] md:text-[24px] font-normal tracking-tight text-[#1A1A1A] leading-[0.92] group-hover:text-[#8C7355] transition-colors">
+              Estate
+            </span>
+            <span className="font-sans text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-[#8C7355] leading-none mt-1">
+              Analytics
+            </span>
+          </div>
+          <div className="hidden lg:block h-6 w-px bg-[#1A1A1A]/15 ml-1.5" />
+          <span className="hidden lg:inline font-sans text-[9px] font-bold uppercase tracking-[0.25em] text-[#1A1A1A]/50">
             Monograph No. 042
           </span>
         </button>

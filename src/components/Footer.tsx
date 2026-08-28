@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ShieldCheck, FileText, Headphones, TrendingUp } from 'lucide-react';
+import { X, ShieldCheck, FileText, Headphones, TrendingUp, Building2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const [modalType, setModalType] = useState<'privacy' | 'terms' | 'support' | 'investor' | null>(null);
@@ -60,9 +60,19 @@ export const Footer: React.FC = () => {
 
         {/* Primary Footer Links & Imprint */}
         <div className="max-w-[1200px] mx-auto px-5 md:px-16 py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-          <div className="flex flex-col gap-2">
-            <div className="font-serif text-[22px] italic font-semibold tracking-tighter text-[#F5F2ED]">
-              ESTATEANALYTICS
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3.5">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-xs bg-[#F5F2ED] text-[#1A1A1A] flex items-center justify-center shrink-0">
+                <Building2 size={18} className="text-[#1A1A1A]" />
+              </div>
+              <div className="flex flex-col text-left justify-center">
+                <span className="font-serif text-[21px] md:text-[24px] font-normal tracking-tight text-[#F5F2ED] leading-[0.92]">
+                  Estate
+                </span>
+                <span className="font-sans text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-[#8C7355] leading-none mt-1">
+                  Analytics
+                </span>
+              </div>
             </div>
             <p className="text-[12px] text-[#F5F2ED]/60 font-sans max-w-md tracking-wider">
               An institutional research desk and appraisal methodology publishing house.
