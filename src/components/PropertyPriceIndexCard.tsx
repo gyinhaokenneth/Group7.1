@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CalculatedDistrictStats } from '../data/singaporeDistricts';
-import { Activity, TrendingUp, BarChart3, MapPin, Layers, Info } from 'lucide-react';
+import { Activity, TrendingUp, TrendingDown, Minus, BarChart3, MapPin, Layers, Info } from 'lucide-react';
 import { URAPriceIndexPanel } from './URAPriceIndexPanel';
+import { URAPriceIndex } from '../types';
+import { fetchURAPriceIndex } from '../services/uraService';
 
 interface PropertyPriceIndexCardProps {
   stats: CalculatedDistrictStats;
@@ -9,7 +11,42 @@ interface PropertyPriceIndexCardProps {
 }
 
 export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ stats, sqft }) => {
-  const isPremium = stats.spreadVsNational >= 0;
+  // Recomputed below against the live national index; the precomputed
+  // stats.spreadVsNational is measured against a stale hardcoded baseline.
+
+  // Fetched once here and shared with the panel below.
+  const [priceIndex, setPriceIndex] = useState<URAPriceIndex | null>(null);
+  const [indexLoading, setIndexLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchURAPriceIndex(12)
+      .then((res) => {
+        if (!cancelled) setPriceIndex(res);
+      })
+      .finally(() => {
+        if (!cancelled) setIndexLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // The official national benchmark: HDB has its own index, everything else
+  // sits under URA's All Private Residential series.
+  const isHdb = stats.propertyType === 'hdb';
+  const national = priceIndex?.segments.find((seg) =>
+    isHdb ? seg.key === 'hdb' : seg.key === 'allResidential'
+  );
+  const nationalYoy = national?.yoy ?? null;
+
+  // Spread must be measured against whatever national figure is on screen,
+  // otherwise the district tile contradicts the tile beside it.
+  const spreadVsNational =
+    national?.latest != null
+      ? Math.round(((stats.districtPriceIndex - national.latest) / national.latest) * 1000) / 10
+      : stats.spreadVsNational;
+  const isPremium = spreadVsNational >= 0;
 
   // Normalized bar widths for Min, Median, Max PSF
   const maxBenchmark = Math.max(stats.maxPsf * 1.05, 3500);
@@ -42,24 +79,36 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
 
       {/* 2-Column Comparison: National vs District Index */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* National Index */}
+        {/* National Index - official URA / HDB published figure */}
         <div className="p-5 bg-[#FAF8F5] rounded-xs border border-[#1A1A1A]/10 relative">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between gap-2 mb-2">
             <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/60">
-              Singapore National Price Index
+              {isHdb ? 'HDB Resale Price Index' : 'Singapore National Price Index'}
             </span>
-            <span className="text-[10px] font-sans text-[#1A1A1A]/50 uppercase">Base Q1 2020 = 100</span>
+            <span className="text-[10px] font-sans text-[#1A1A1A]/50 uppercase shrink-0">
+              {national?.asOf ? `${national.asOf} · Base 1Q2009 = 100` : 'Official'}
+            </span>
           </div>
           <div className="flex items-baseline gap-3">
             <span className="font-serif text-[36px] font-light text-[#1A1A1A]">
-              {stats.nationalPriceIndex.toFixed(1)}
+              {indexLoading ? '—' : national?.latest != null ? national.latest.toFixed(1) : '—'}
             </span>
-            <span className="text-emerald-700 text-[12px] font-sans font-bold flex items-center gap-0.5">
-              <TrendingUp size={14} /> +3.2% YoY
-            </span>
+            {nationalYoy !== null && (
+              <span
+                className={`text-[12px] font-sans font-bold flex items-center gap-0.5 ${
+                  nationalYoy > 0 ? 'text-emerald-700' : nationalYoy < 0 ? 'text-amber-700' : 'text-[#1A1A1A]/60'
+                }`}
+              >
+                {nationalYoy > 0 ? <TrendingUp size={14} /> : nationalYoy < 0 ? <TrendingDown size={14} /> : <Minus size={14} />}
+                {nationalYoy > 0 ? '+' : ''}
+                {nationalYoy.toFixed(1)}% YoY
+              </span>
+            )}
           </div>
           <p className="font-serif text-[13px] text-[#1A1A1A]/70 mt-1">
-            Aggregate residential resale composite benchmark across all 28 Singapore sectors.
+            {isHdb
+              ? 'Official HDB resale price index, published quarterly via data.gov.sg.'
+              : 'Official URA private residential price index, published quarterly via data.gov.sg.'}
           </p>
         </div>
 
@@ -69,7 +118,12 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
             <span className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#8C7355]">
               {stats.districtCode} Location Price Index
             </span>
-            <span className="text-[10px] font-sans text-[#8C7355] font-bold uppercase">Submarket Composite</span>
+            <span
+              className="text-[10px] font-sans text-[#8C7355] font-bold uppercase shrink-0"
+              title="URA publishes no per-district index; the finest official granularity is CCR / RCR / OCR, shown below."
+            >
+              EstateAnalytics Estimate
+            </span>
           </div>
           <div className="flex items-baseline gap-3">
             <span className="font-serif text-[36px] font-light text-[#1A1A1A]">
@@ -80,17 +134,27 @@ export const PropertyPriceIndexCard: React.FC<PropertyPriceIndexCardProps> = ({ 
                 isPremium ? 'text-emerald-700' : 'text-amber-700'
               }`}
             >
-              <TrendingUp size={14} /> {isPremium ? `+${stats.spreadVsNational}%` : `${stats.spreadVsNational}%`} vs Nat'l
+              {isPremium ? <TrendingUp size={14} /> : <TrendingDown size={14} />}{' '}
+              {isPremium ? `+${spreadVsNational}%` : `${spreadVsNational}%`} vs Nat'l
             </span>
           </div>
           <p className="font-serif text-[13px] text-[#1A1A1A]/70 mt-1">
             Historical 5-year annualized capital appreciation rate: <strong>{stats.annualGrowthRate}% p.a.</strong>
           </p>
+          <p className="font-serif text-[11px] text-[#1A1A1A]/50 mt-1.5">
+            Modelled submarket composite — not an official URA series. URA publishes down to
+            CCR / RCR / OCR only; see the official figures below.
+          </p>
         </div>
       </div>
 
       {/* Official URA price index: landed / non-landed and CCR / RCR / OCR */}
-      <URAPriceIndexPanel region={stats.region} propertyType={stats.propertyType} />
+      <URAPriceIndexPanel
+        data={priceIndex}
+        loading={indexLoading}
+        region={stats.region}
+        propertyType={stats.propertyType}
+      />
 
       {/* Min, Median, Max Price Distribution for Selected Location */}
       <div className="p-5 bg-[#FFFFFF] rounded-xs border border-[#1A1A1A]/15 shadow-2xs">

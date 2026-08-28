@@ -19,6 +19,7 @@
 const DATASTORE = 'https://data.gov.sg/api/action/datastore_search';
 const TYPE_DATASET = 'd_97f8a2e995022d311c6c68cfda6d034c';
 const LOCALITY_DATASET = 'd_f65e490a8ad430f60a9a3d9df2bff2a0';
+const HDB_DATASET = 'd_14f63e595975691e7c24a27ae4c07c79';
 
 const BASE_PERIOD = '2009-Q1 = 100';
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // quarterly data - 6h is plenty
@@ -27,6 +28,9 @@ let cache = null;
 let cacheTimestamp = 0;
 
 const SEGMENTS = [
+  // group 'national' feeds the headline benchmark tile, not the type/locality grids.
+  { key: 'allResidential', label: 'All Private Residential', group: 'national', match: 'All Residential' },
+  { key: 'hdb', label: 'HDB Resale', group: 'national', match: '__hdb__' },
   { key: 'landed', label: 'Landed', group: 'type', match: 'Landed' },
   { key: 'nonLanded', label: 'Non-Landed', group: 'type', match: 'Non-Landed' },
   { key: 'ccr', label: 'CCR', full: 'Core Central Region', group: 'locality', match: 'Core Central Region' },
@@ -68,11 +72,12 @@ export async function getPriceIndex(options = {}) {
   const now = Date.now();
 
   if (!cache || now - cacheTimestamp > CACHE_TTL_MS) {
-    const [typeRows, localityRows] = await Promise.all([
+    const [typeRows, localityRows, hdbRows] = await Promise.all([
       fetchDataset(TYPE_DATASET),
       fetchDataset(LOCALITY_DATASET),
+      fetchDataset(HDB_DATASET),
     ]);
-    cache = { typeRows, localityRows };
+    cache = { typeRows, localityRows, hdbRows };
     cacheTimestamp = now;
   }
 
@@ -80,7 +85,9 @@ export async function getPriceIndex(options = {}) {
   const byQuarter = new Map(SEGMENTS.map((s) => [s.key, new Map()]));
 
   for (const r of cache.typeRows) {
-    const seg = SEGMENTS.find((s) => s.group === 'type' && s.match === r.property_type);
+    const seg = SEGMENTS.find(
+      (s) => (s.group === 'type' || s.group === 'national') && s.match === r.property_type
+    );
     const value = parseFloat(r.index);
     if (seg && Number.isFinite(value)) byQuarter.get(seg.key).set(r.quarter, value);
   }
@@ -90,9 +97,16 @@ export async function getPriceIndex(options = {}) {
     if (seg && Number.isFinite(value)) byQuarter.get(seg.key).set(r.quarter, value);
   }
 
+  for (const r of cache.hdbRows) {
+    const value = parseFloat(r.index);
+    if (Number.isFinite(value)) byQuarter.get('hdb').set(r.quarter, value);
+  }
+
   // Shared quarter axis: only quarters every segment reports, newest last.
-  const common = [...byQuarter.values()]
-    .map((m) => new Set(m.keys()))
+  // Intersect only the grid segments: a national series that publishes on a
+  // different cadence must not shorten the axis for everything else.
+  const common = SEGMENTS.filter((s) => s.group !== 'national')
+    .map((s) => new Set(byQuarter.get(s.key).keys()))
     .reduce((acc, set) => (acc === null ? set : new Set([...acc].filter((q) => set.has(q)))), null);
 
   const axis = [...(common || [])]
@@ -105,22 +119,25 @@ export async function getPriceIndex(options = {}) {
   const segments = SEGMENTS.map((seg) => {
     const m = byQuarter.get(seg.key);
     const series = axis.map((q) => ({ quarter: q, index: m.has(q) ? m.get(q) : null }));
-    const latest = latestQuarter ? m.get(latestQuarter) ?? null : null;
 
-    const prevQ = axis[axis.length - 2] ?? null;
-    // Same quarter one year earlier, for a like-for-like YoY.
-    const yearAgoKey = latestQuarter ? quarterKey(latestQuarter) - 4 : null;
-    const yearAgoQ =
-      yearAgoKey === null ? null : [...m.keys()].find((q) => quarterKey(q) === yearAgoKey) ?? null;
+    // Anchor each segment on its own newest published quarter so a series that
+    // reports late still shows a correct figure instead of a null.
+    const own = [...m.keys()].filter((q) => quarterKey(q) !== null).sort((a, b) => quarterKey(a) - quarterKey(b));
+    const asOf = own[own.length - 1] ?? null;
+    const latest = asOf ? m.get(asOf) : null;
+    const prevQ = own[own.length - 2] ?? null;
+    const yearAgoKey = asOf ? quarterKey(asOf) - 4 : null;
+    const yearAgoQ = yearAgoKey === null ? null : own.find((q) => quarterKey(q) === yearAgoKey) ?? null;
 
     return {
       key: seg.key,
       label: seg.label,
       fullLabel: seg.full || seg.label,
       group: seg.group,
+      asOf,
       latest,
-      qoq: pctChange(latest, prevQ ? m.get(prevQ) ?? null : null),
-      yoy: pctChange(latest, yearAgoQ ? m.get(yearAgoQ) ?? null : null),
+      qoq: pctChange(latest, prevQ ? m.get(prevQ) : null),
+      yoy: pctChange(latest, yearAgoQ ? m.get(yearAgoQ) : null),
       series,
     };
   });

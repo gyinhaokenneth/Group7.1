@@ -283,10 +283,11 @@ export interface URAPriceIndexPoint {
 }
 
 export interface URAPriceIndexSegment {
-  key: 'landed' | 'nonLanded' | 'ccr' | 'rcr' | 'ocr';
+  key: 'allResidential' | 'hdb' | 'landed' | 'nonLanded' | 'ccr' | 'rcr' | 'ocr';
   label: string;
   fullLabel: string;
-  group: 'type' | 'locality';
+  group: 'national' | 'type' | 'locality';
+  asOf: string | null;
   latest: number | null;
   qoq: number | null;
   yoy: number | null;

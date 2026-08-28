@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { URAPriceIndex, URAPriceIndexSegment } from '../types';
-import { fetchURAPriceIndex } from '../services/uraService';
 import { TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
 
 interface URAPriceIndexPanelProps {
+  /** Supplied by the parent so the card and panel share one fetch. */
+  data: URAPriceIndex | null;
+  loading: boolean;
   /** Highlights the locality tile matching the district under valuation. */
   region?: 'CCR' | 'RCR' | 'OCR';
   /** Highlights Landed or Non-Landed to match the property being valued. */
@@ -49,24 +51,7 @@ const Delta: React.FC<{ value: number | null; label: string }> = ({ value, label
   );
 };
 
-export const URAPriceIndexPanel: React.FC<URAPriceIndexPanelProps> = ({ region, propertyType }) => {
-  const [data, setData] = useState<URAPriceIndex | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchURAPriceIndex(12)
-      .then((res) => {
-        if (!cancelled) setData(res);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+export const URAPriceIndexPanel: React.FC<URAPriceIndexPanelProps> = ({ data, loading, region, propertyType }) => {
   const isLanded = (propertyType || '').toLowerCase().includes('landed');
   const highlighted = (seg: URAPriceIndexSegment) => {
     if (seg.group === 'locality') return region ? seg.label === region : false;
